@@ -11,7 +11,7 @@ function Register() {
       async function handleRegister(){
         console.log(username);
         console.log(password);
-        const response = await axios.post("http://localhost:3000/auth/register",
+        const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/auth/register`,
             {
                 username: username,
                 password: password

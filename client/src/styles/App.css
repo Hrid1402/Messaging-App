@@ -1,42 +1,83 @@
 #root {
-  max-width: 1280px;
+  width: 100%;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 2rem 0;
   text-align: center;
 }
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+/*Main Part*/
+.content{
+  color: white;
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  background-color: red;
+  height: 100vh;
+  width: 100%;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+aside{
+  padding: 25px;
+  background-color: green;
+  height: 100%;
 }
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+section{
+  background-color: blue;
+  height: 100%;
 }
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/*Main Part - Account*/
+.accountInf{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 25px
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.account{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px
 }
-
-.card {
-  padding: 2em;
+.account img{
+  border-radius: 50%;
+  height: 55px;
+  width: 55px;
+  object-fit: contain;
 }
-
-.read-the-docs {
-  color: #888;
+/*Main Part - friendsInf*/
+.friendsInf .friendsTxt{
+  color: black;
+}
+.addFriend{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.addFInput{
+  display: flex;
+  flex-direction: column;
+}
+.addFInput h4{
+  font-size: 20px;
+  text-align: start;
+  margin: 0;
+}
+.addFInput input{
+  padding: 5px 5px;
+  font-size: 22px;
+}
+.foundUsers{
+  padding: 15px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.userToAdd{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+}
+.userToAdd img{
+  border-radius: 50%;
+  height: 70px;
 }

@@ -12,7 +12,7 @@ function Login() {
     async function handleLogin(){
         console.log(username);
         console.log(password);
-        const response = await axios.post("http://localhost:3000/auth/login",
+        const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/auth/login`,
             {
                 username: username,
                 password: password
