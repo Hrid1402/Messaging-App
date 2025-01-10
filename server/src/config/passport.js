@@ -15,7 +15,11 @@ const opts = {
         const user = await prisma.user.findUnique({
             where:{
                 id: payload.id
-            }
+              }, include:{
+                friends:true,
+                sendedRequests:true,
+                receivedRequests: true
+              }
         });
         if (user) return done(null, user);
       } catch (error) {

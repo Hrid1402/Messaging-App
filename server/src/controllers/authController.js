@@ -5,7 +5,6 @@ import bcrypt from 'bcrypt'
 import { body, validationResult } from "express-validator"
 import 'dotenv/config'
 import jwt from 'jsonwebtoken'
-import passport from 'passport'
 
 
 export const validateUser = [
@@ -86,8 +85,9 @@ export async function getUser(req, res){
             username: user.username,
             picture: user.picture,
             friends: user.friends,
-            chats: user.chats
-
+            chats: user.chats,
+            sended: user.sendedRequests,
+            received: user.receivedRequests
         })
     }catch(error){
         console.log(error);
@@ -116,6 +116,28 @@ export async function putUser(req, res){
             chats: user.chats
 
         })
+    }catch(error){
+        console.log(error);
+    }
+}
+
+export async function searchUser(req, res){
+    try{
+        const {username} = req.body;
+        console.log(username);
+        const users = await prisma.user.findMany({
+            where:{
+                username:{
+                    contains: username,
+                    mode: 'insensitive'
+                }
+            }, select:{
+                id: true,
+                username: true,
+                picture: true
+            }
+        });
+        res.status(200).json(users);
     }catch(error){
         console.log(error);
     }

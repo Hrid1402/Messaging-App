@@ -16,6 +16,8 @@ model User{
 
   friends User[] @relation("UserFriends")
   friendsOf User[] @relation("UserFriends")
+  sendedRequests FriendRequest[] @relation("sended")
+  receivedRequests FriendRequest[]  @relation("received")
 
   chats Chat[] @relation("chats")
 }
@@ -33,4 +35,14 @@ model Message{
   chat Chat @relation(fields:[chatID], references: [id])
   edited Boolean @default(false)
   deleted Boolean @default(false)
+}
+
+model FriendRequest{
+  id String @id @default(cuid())
+  fromID String
+  fromName String @db.VarChar(35)
+  from User @relation("sended", fields: [fromID], references: [id])
+  toID String 
+  toName String @db.VarChar(35)
+  to User  @relation("received", fields: [toID], references: [id])
 }
