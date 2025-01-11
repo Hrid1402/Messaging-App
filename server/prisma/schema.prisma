@@ -20,6 +20,7 @@ model User{
   receivedRequests FriendRequest[]  @relation("received")
 
   chats Chat[] @relation("chats")
+  messages Message[]
 }
 
 model Chat{
@@ -32,9 +33,13 @@ model Chat{
 model Message{
   id String @id @default(cuid())
   chatID String
+  content String
+  authorID String
+  author User @relation(fields: [authorID], references: [id])
   chat Chat @relation(fields:[chatID], references: [id])
   edited Boolean @default(false)
   deleted Boolean @default(false)
+  createdAt DateTime @default(now())
 }
 
 model FriendRequest{

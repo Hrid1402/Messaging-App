@@ -214,7 +214,49 @@ export const socketHandler = (socket, io)=>{
             
         }catch(error){
             console.error('Error declining friend request:', error);
+        }        
+    });
+
+    //Messages logic
+    socket.on('sendMessage', async(data) => {
+        console.log('A message was sended:', data);
+        try{
+            const newMessage = await prisma.message.create({
+                data:{
+                    chatID: data.chatID,
+                    content: data.content,
+                    authorID: data.authorID
+                }
+            });
+
+            console.log("New message: ", newMessage);
+
+            const chat = await prisma.chat.update({
+                where:{
+                    id: data.chatID
+                },
+                data:{
+                    messages:{
+                        connect:{
+                            id: newMessage.id
+                        }
+                    }
+                },
+                include:{
+                    participants: true,
+                    messages: true
+                }
+            });
+
+            console.log("Modified chat:", chat);
+
+            io.to(data.authorID).emit('receivedMessage', chat);
+            io.to(data.toID).emit('receivedMessage', chat);
+
+        }catch(error){
+            console.log("Error sending message", error)
         }
+        
     });
 
     socket.on('disconnect', () => {
