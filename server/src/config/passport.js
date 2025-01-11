@@ -18,7 +18,13 @@ const opts = {
               }, include:{
                 friends:true,
                 sendedRequests:true,
-                receivedRequests: true
+                receivedRequests: true,
+                chats: {
+                  include:{
+                    participants: true,
+                    messages: true
+                  }
+                }
               }
         });
         if (user) return done(null, user);

@@ -127,6 +127,37 @@ export const socketHandler = (socket, io)=>{
                     receivedRequests: true
                 }
             });
+
+            //CHAT LOGIC
+            let Chat = null
+            //Create chat if doesnt exist
+            const oldChat = await prisma.chat.findFirst({
+                where:{
+                    AND: [
+                        { participants: { some: { id: "participant1_id" } } },
+                        { participants: { some: { id: "participant2_id" } } }
+                    ]
+                }
+            })
+            if (oldChat){
+                console.log("oldChat exist!");
+                console.log(oldChat);
+                Chat = oldChat;
+                //Logic to return oldChat after being friends again.
+            }else{
+                Chat = await prisma.chat.create({
+                    data:{
+                        participants:{
+                            connect:[
+                                {id: data.fromID},
+                                {id: data.toID}
+                            ]
+                        }
+                    }
+                })
+            }
+
+
             const senderFriends = await prisma.user.update({
                 where:{
                     id: data.fromID,
@@ -135,9 +166,19 @@ export const socketHandler = (socket, io)=>{
                         connect:{
                             id: data.toID
                         }
+                    },chats:{
+                        connect:{
+                            id: Chat.id
+                        }
                     }
                 }, select:{
-                    friends:true
+                    friends:true,
+                    chats: {
+                        include:{
+                            participants: true,
+                            messages: true
+                          }
+                    }
                 }
             });
 
@@ -149,15 +190,26 @@ export const socketHandler = (socket, io)=>{
                         connect:{
                             id: data.fromID
                         }
+                    },chats:{
+                        connect:{
+                            id: Chat.id
+                        }
                     }
                 }, select:{
-                    friends:true
+                    friends:true,
+                    chats: {
+                        include:{
+                            participants: true,
+                            messages: true
+                          }
+                    }
                 }
             });
-                
-            //return data
-            io.to(data.toID).emit('updateAcceptedRequest',  {received:receivedReqs.receivedRequests, from: data.fromName, friends:receiverFriends.friends});
-            io.to(data.fromID).emit('updateAcceptedRequestSended', {sended:sendedReqs.sendedRequests, to: data.toName, friends:senderFriends.friends});
+                 
+
+
+            io.to(data.toID).emit('updateAcceptedRequest',  {received:receivedReqs.receivedRequests, from: data.fromName, friends:receiverFriends.friends, chats:receiverFriends.chats});
+            io.to(data.fromID).emit('updateAcceptedRequestSended', {sended:sendedReqs.sendedRequests, to: data.toName, friends:senderFriends.friends, chats:senderFriends.chats});
 
             
         }catch(error){

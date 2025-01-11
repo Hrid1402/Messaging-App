@@ -114,7 +114,6 @@ export async function putUser(req, res){
             picture: user.picture,
             friends: user.friends,
             chats: user.chats
-
         })
     }catch(error){
         console.log(error);
