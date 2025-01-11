@@ -4,7 +4,7 @@ import {toast} from 'react-toastify';
 import '../styles/PendingRequests.css'
 
 
-function PendingRequests({user, socket, updateFriends}) {
+function PendingRequests({user, socket, updateFriends, updateChats}) {
   const [friendRequests, setFriendRequests] = useState(user.received);
 
   useEffect(()=>{
@@ -18,6 +18,7 @@ function PendingRequests({user, socket, updateFriends}) {
       toast.success(`Request from ${data.from} accepted!.`);
       setFriendRequests(data.received);
       updateFriends(data.friends);
+      updateChats(data.chats);
     });
 
     socket.on('updateDeclinedRequest', (data) => {

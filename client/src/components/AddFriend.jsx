@@ -4,7 +4,7 @@ import Cookies from 'js-cookie'
 import noPicture from '../assets/noPicturePfp.png'
 import {toast} from 'react-toastify';
 
-function AddFriend({user, socket, updateFriends, friends}) {
+function AddFriend({user, socket, updateFriends, friends, updateChats}) {
     const [searchedUser, setSearchedUser] = useState("");
     const [showSearch, setShowSearch] = useState(false);
     const [searchedFriends, setSearchedFriends] = useState([]);
@@ -26,6 +26,7 @@ function AddFriend({user, socket, updateFriends, friends}) {
           toast.success(`${data.to} accepted your request!`);
           setSendedRequest(data.sended);
           updateFriends(data.friends);
+          updateChats(data.chats);
         });
 
         socket.on('updateDeclinedRequestSended', (data) => {

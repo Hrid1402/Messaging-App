@@ -1,7 +1,6 @@
 #root {
   width: 100%;
   margin: 0 auto;
-  padding: 2rem 0;
   text-align: center;
 }
 /*Main Part*/
@@ -16,7 +15,6 @@
 aside{
   padding: 25px;
   background-color: green;
-  height: 100%;
 }
 section{
   background-color: blue;

@@ -1,0 +1,65 @@
+.headerFriendData{
+    background-color: red;
+    width: 100%;
+}
+.friendUserDataBTN{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 25px;
+
+}
+.friendUserDataBTN img{
+    border-radius: 50%;
+    height: 80px;
+    width: 80px;
+    object-fit: contain;
+}
+.MainChatContainer{
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+.InputArea{
+    padding: 25px;
+    display: grid;
+    gap: 25px;
+    bottom: 0;
+    grid-template-columns: 3fr 1fr;
+}
+
+.InputArea textarea{
+    resize: none;
+    font-size: 20px;
+    padding: 5px;
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    height: auto;
+    field-sizing: content;
+}
+
+.allMessagesContainer{
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(40, 66, 0);
+    overflow-y: auto;
+    flex: 1;
+    gap: 5px;
+    padding: 15px;
+}
+.message{
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    display: flex;
+    padding: 0px 20px;
+    border-radius: 35px;
+    font-size: 12px;
+    align-self: start;
+    flex-direction: column;
+    text-align: start;
+    width: fit-content;
+    background-color: rgb(48, 48, 48);
+}
+.messageSendedByMe{
+    align-self: end;
+}

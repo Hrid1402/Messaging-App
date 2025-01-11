@@ -1,0 +1,28 @@
+.allChats{
+    display: flex;
+    flex-direction: column;
+}
+.chatListBTN{
+    border-radius: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    gap: 25px;
+    border: 3px solid rgb(0, 0, 0);
+}
+.chatListBTN img{
+    border-radius: 50%;
+    height: 65px;
+    width: 65px;
+    object-fit: contain;
+}
+.chatListBTN h1{
+    font-size: 32px;
+}
+.chatListBTN:hover{
+    border: 3px solid gray;
+}
+.chatListBTN_ACTIVE{
+    background-color: gray;
+}

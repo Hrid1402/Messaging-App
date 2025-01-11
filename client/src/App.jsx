@@ -9,19 +9,34 @@ import Cookies from 'js-cookie'
 import AddFriend from './components/AddFriend.jsx'
 import PendingRequests from './components/PendingRequests.jsx'
 import MyFriends from './components/MyFriends.jsx'
+import ChatsList from './components/ChatsList.jsx'
 import noPicture from './assets/noPicturePfp.png'
 import { ToastContainer} from 'react-toastify';
+import MainChat from './components/MainChat.jsx';
 
 function App() {
   const [user, setUser] = useState(null);
   const [openDialog_fr, setOpenDialog_fr] = useState(false);
   const [openDialog_pr, setOpenDialog_pr] = useState(false);
   const [openDialog_mf, setOpenDialog_mf] = useState(false);
+
+
   const [myFriends, setMyFriends] = useState([]);
+  const [chats, setChats] = useState([]);
+  const [currentChatData, setCurrentChatData] = useState(null);
+
   const navigate = useNavigate();
 
   function updateFriends(newFriendList){
     setMyFriends(newFriendList);
+  }
+
+  function updateChats(newChatsList){
+    setChats(newChatsList);
+  }
+
+  function updateCurrentChatData(newCurrentChatData, friend){
+    setCurrentChatData({chat:newCurrentChatData, friend:friend ?? currentChatData.friend});
   }
 
   useEffect(()=>{
@@ -32,6 +47,7 @@ function App() {
       }}).then(r=>{
         setUser(r.data)
         setMyFriends(r.data.friends);
+        setChats(r.data.chats);
         console.log(`Logged as ${r.data.username}`);
         console.log(r.data)
         socket.connect();
@@ -40,16 +56,15 @@ function App() {
   return (
     <>
       <ToastContainer autoClose={5000}/>
-      <h1>Messaging app</h1>
       {
         user ? 
         <>
          <Rodal visible={openDialog_fr} onClose={()=>setOpenDialog_fr(false)} height={600} width={430}>
-            <AddFriend user={user} socket={socket} updateFriends={updateFriends} friends={myFriends}/>
+            <AddFriend user={user} socket={socket} updateFriends={updateFriends} friends={myFriends} updateChats={updateChats}/>
           </Rodal>
 
           <Rodal visible={openDialog_pr} onClose={()=>setOpenDialog_pr(false)} height={600} width={430}>
-            <PendingRequests user={user} socket={socket} updateFriends={updateFriends}/>
+            <PendingRequests user={user} socket={socket} updateFriends={updateFriends} updateChats={updateChats}/>
           </Rodal>
 
           <Rodal visible={openDialog_mf} onClose={()=>setOpenDialog_mf(false)} height={600} width={430}>
@@ -72,12 +87,16 @@ function App() {
               </div>
               <div>
                 <h2>Messages</h2>
+                <ChatsList chats={chats} user={user} updateCurrentChatData={updateCurrentChatData}/>
               </div>
             </aside>
-            <section></section>
+            <section>
+              {currentChatData ? <MainChat chat={currentChatData.chat} friend={currentChatData.friend} user={user} socket={socket} updateCurrentChatData={updateCurrentChatData}/> : null}
+            </section>
           </main>
         </>: 
         <>
+          <h1>Messaging app</h1>
           <button onClick={()=>navigate("/login")}>Login</button>
           <button onClick={()=>navigate("/register")}>Register</button>
         </>
