@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react'
-import { socket } from './socket'
+import { socket, connectSocket } from './socket'
 import Rodal from 'rodal';
 import 'rodal/lib/rodal.css';
 import './styles/App.css'
@@ -45,12 +45,12 @@ function App() {
           Authorization: `Bearer ${Cookies.get("jwt")}`,
           "Content-Type": "application/json"
       }}).then(r=>{
+        connectSocket(Cookies.get("jwt"));
         setUser(r.data)
         setMyFriends(r.data.friends);
         setChats(r.data.chats);
         console.log(`Logged as ${r.data.username}`);
         console.log(r.data)
-        socket.connect();
       }).catch(err=>{console.log(err.response.data)});
   },[])
   return (

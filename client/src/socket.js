@@ -1,8 +1,12 @@
 import { io } from 'socket.io-client';
-import Cookies from 'js-cookie'
 export const socket = io('http://localhost:3000', {
     autoConnect: false,
-    auth:{
-        token: Cookies.get("jwt")
-    }
+    reconnection: true,
+    reconnectionAttempts: Infinity, 
+    reconnectionDelay: 1000
 });
+
+export const connectSocket = (token) => {
+    socket.auth = { token };
+    socket.connect();
+};
