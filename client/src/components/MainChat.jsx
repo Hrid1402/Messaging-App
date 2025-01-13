@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import noPicture from '../assets/noPicturePfp.png'
 import '../styles/MainChat.css'
 
-function MainChat({chat, friend, user, socket, updateCurrentChatData}) {
+function MainChat({chat, friend, user, socket, updateCurrentChatData, chats}) {
+    const containerRef = useRef(null);
     const [message, setMessage]  = useState("")
+    const currentChat = chats.find(c => c.id === chat.id);
     useEffect(()=>{
         socket.on('receivedMessage', (data) => {
             console.log("socket received", data);
             updateCurrentChatData(data);
         });
-        setMessage("");
-    }, [chat, friend, socket]);
+    }, [chat, socket, chats]);
 
 
     function sendMessage(newMessage){
@@ -26,9 +27,9 @@ function MainChat({chat, friend, user, socket, updateCurrentChatData}) {
                 <h1>{friend.username}</h1>
             </button>
         </header>
-        <main className='allMessagesContainer'>
+        <main className='allMessagesContainer' ref={containerRef}>
             {
-                chat.messages.map(m=>{
+                currentChat.messages.map(m=>{
                     return <Message messageData={m} key={m.id} friend={friend}/>
                 })
             }

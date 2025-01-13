@@ -35,8 +35,13 @@ function App() {
     setChats(newChatsList);
   }
 
-  function updateCurrentChatData(newCurrentChatData, friend){
-    setCurrentChatData({chat:newCurrentChatData, friend:friend ?? currentChatData.friend});
+  function updateCurrentChatData(newCurrentChatData){
+    setChats(prevChats => prevChats.map(chat=> 
+      chat.id === newCurrentChatData.id ? newCurrentChatData : chat));
+  }
+
+  function changeCurrentChat(newCurrentChatData, friend){
+    setCurrentChatData({chat:newCurrentChatData, friend:friend});
   }
 
   useEffect(()=>{
@@ -87,11 +92,11 @@ function App() {
               </div>
               <div>
                 <h2>Messages</h2>
-                <ChatsList chats={chats} user={user} updateCurrentChatData={updateCurrentChatData}/>
+                <ChatsList chats={chats} user={user} changeCurrentChat={changeCurrentChat}/>
               </div>
             </aside>
             <section>
-              {currentChatData ? <MainChat chat={currentChatData.chat} friend={currentChatData.friend} user={user} socket={socket} updateCurrentChatData={updateCurrentChatData}/> : null}
+              {currentChatData ? <MainChat chat={currentChatData.chat} friend={currentChatData.friend} user={user} socket={socket} updateCurrentChatData={updateCurrentChatData} chats={chats} /> : null}
             </section>
           </main>
         </>: 
