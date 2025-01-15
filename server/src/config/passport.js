@@ -22,7 +22,14 @@ const opts = {
                 chats: {
                   include:{
                     participants: true,
-                    messages: true
+                    messages: {
+                      orderBy:{
+                        createdAt: "asc"
+                      }
+                    }
+                  },
+                  orderBy:{
+                      updatedAt: "desc"
                   }
                 }
               }

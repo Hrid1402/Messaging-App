@@ -176,8 +176,12 @@ export const socketHandler = (socket, io)=>{
                     chats: {
                         include:{
                             participants: true,
-                            messages: true
-                          }
+                            messages: {
+                                orderBy:{
+                                  createdAt: "asc"
+                                }
+                              }
+                        }
                     }
                 }
             });
@@ -200,7 +204,11 @@ export const socketHandler = (socket, io)=>{
                     chats: {
                         include:{
                             participants: true,
-                            messages: true
+                            messages: {
+                                orderBy:{
+                                  createdAt: "asc"
+                                }
+                              }
                           }
                     }
                 }
@@ -240,18 +248,141 @@ export const socketHandler = (socket, io)=>{
                         connect:{
                             id: newMessage.id
                         }
-                    }
+                    },
+                    updatedAt: new Date()
                 },
                 include:{
                     participants: true,
-                    messages: true
+                    messages: {
+                        orderBy:{
+                          createdAt: "asc"
+                        }
+                      }
                 }
             });
 
-            console.log("Modified chat:", chat);
+            const allChats1 = await prisma.user.findUnique({
+                where:{
+                    id: data.authorID
+                },select:{
+                    friends:true,
+                    chats: {
+                        include:{
+                            participants: true,
+                            messages: {
+                                orderBy:{
+                                  createdAt: "asc"
+                                }
+                              }
+                          },
+                          orderBy:{
+                              updatedAt: "desc"
+                          }
+                    }
+                }
+            })
+            const allChats2 = await prisma.user.findUnique({
+                where:{
+                    id: data.toID
+                },select:{
+                    friends:true,
+                    chats: {
+                        include:{
+                            participants: true,
+                            messages: {
+                                orderBy:{
+                                  createdAt: "asc"
+                                }
+                              }
+                          },
+                          orderBy:{
+                              updatedAt: "desc"
+                          }
+                    }
+                }
+            })
 
-            io.to(data.authorID).emit('receivedMessage', chat);
-            io.to(data.toID).emit('receivedMessage', chat);
+            io.to(data.authorID).emit('receivedMessage', {chat: chat, chats: allChats1.chats});
+            io.to(data.toID).emit('messageNotification',{content: data.content, username:data.username});
+            io.to(data.toID).emit('receivedMessage',{chat: chat, chats: allChats2.chats});
+
+        }catch(error){
+            console.log("Error sending message", error)
+        }
+        
+    });
+    //delete message
+    socket.on('deleteMessage', async(data) => {
+        console.log('A message was deleted:', data);
+        try{
+            const deletedMessage = await prisma.message.update({
+                where:{
+                    id: data.id
+                },
+                data:{
+                    deleted: true
+                }
+            });
+
+            console.log("Deleted Message: ", deletedMessage);
+
+            const chat = await prisma.chat.findUnique({
+                where:{
+                    id: data.chatID
+                },
+                include:{
+                    participants: true,
+                    messages: {
+                        orderBy:{
+                          createdAt: "asc"
+                        }
+                      }
+                }
+            });
+
+            const allChats1 = await prisma.user.findUnique({
+                where:{
+                    id: data.authorID
+                },select:{
+                    friends:true,
+                    chats: {
+                        include:{
+                            participants: true,
+                            messages: {
+                                orderBy:{
+                                  createdAt: "asc"
+                                }
+                              }
+                          },
+                          orderBy:{
+                              updatedAt: "desc"
+                          }
+                    }
+                }
+            })
+            const allChats2 = await prisma.user.findUnique({
+                where:{
+                    id: data.toID
+                },select:{
+                    friends:true,
+                    chats: {
+                        include:{
+                            participants: true,
+                            messages: {
+                                orderBy:{
+                                  createdAt: "asc"
+                                }
+                              }
+                          },
+                          orderBy:{
+                              updatedAt: "desc"
+                          }
+                    }
+                }
+            })
+
+            io.to(data.authorID).emit('receivedMessage', {chat: chat, chats: allChats1.chats});
+            io.to(data.toID).emit('receivedMessage', {chat: chat, chats: allChats2.chats});
 
         }catch(error){
             console.log("Error sending message", error)
