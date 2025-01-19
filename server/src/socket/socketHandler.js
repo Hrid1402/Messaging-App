@@ -134,8 +134,8 @@ export const socketHandler = (socket, io)=>{
             const oldChat = await prisma.chat.findFirst({
                 where:{
                     AND: [
-                        { participants: { some: { id: "participant1_id" } } },
-                        { participants: { some: { id: "participant2_id" } } }
+                        { participants: { some: { id: data.fromID } } },
+                        { participants: { some: { id: data.toID } } }
                     ]
                 }
             })
@@ -221,7 +221,7 @@ export const socketHandler = (socket, io)=>{
 
             
         }catch(error){
-            console.error('Error declining friend request:', error);
+            console.error('Error accepting friend request:', error);
         }        
     });
 
@@ -389,6 +389,151 @@ export const socketHandler = (socket, io)=>{
         }
         
     });
+
+    //edit message
+    socket.on('editMessage', async(data) => {
+        console.log('A message was edited:', data);
+        try{
+            const editedMessage = await prisma.message.update({
+                where:{
+                    id: data.id
+                },
+                data:{
+                    content: data.content,
+                    edited: true
+                }
+            });
+
+            console.log("Edited Message: ", editedMessage);
+
+            const chat = await prisma.chat.findUnique({
+                where:{
+                    id: data.chatID
+                },
+                include:{
+                    participants: true,
+                    messages: {
+                        orderBy:{
+                          createdAt: "asc"
+                        }
+                      }
+                }
+            });
+
+            const allChats1 = await prisma.user.findUnique({
+                where:{
+                    id: data.authorID
+                },select:{
+                    friends:true,
+                    chats: {
+                        include:{
+                            participants: true,
+                            messages: {
+                                orderBy:{
+                                  createdAt: "asc"
+                                }
+                              }
+                          },
+                          orderBy:{
+                              updatedAt: "desc"
+                          }
+                    }
+                }
+            })
+            const allChats2 = await prisma.user.findUnique({
+                where:{
+                    id: data.toID
+                },select:{
+                    friends:true,
+                    chats: {
+                        include:{
+                            participants: true,
+                            messages: {
+                                orderBy:{
+                                  createdAt: "asc"
+                                }
+                              }
+                          },
+                          orderBy:{
+                              updatedAt: "desc"
+                          }
+                    }
+                }
+            })
+
+            io.to(data.authorID).emit('receivedMessage', {chat: chat, chats: allChats1.chats});
+            io.to(data.toID).emit('receivedMessage', {chat: chat, chats: allChats2.chats});
+
+        }catch(error){
+            console.log("Error sending message", error)
+        }
+        
+    });
+
+    //deleting friend
+    socket.on('removeFriend', async(data)=>{
+        console.log("Removing friend")
+        console.log(data);
+        try{
+            const senderFriends = await prisma.user.update({
+                where:{
+                    id: data.fromID,
+                },data:{
+                    friends:{
+                        disconnect:{
+                            id: data.toID
+                        }
+                    }
+                }, select:{
+                    friends:true,
+                    chats: {
+                        include:{
+                            participants: true,
+                            messages: {
+                                orderBy:{
+                                  createdAt: "asc"
+                                }
+                              }
+                        }
+                    }
+                }
+            });
+
+            const receiverFriends = await prisma.user.update({
+                where:{
+                    id: data.toID,
+                },data:{
+                    friends:{
+                        disconnect:{
+                            id: data.fromID
+                        }
+                    }
+                }, select:{
+                    friends:true,
+                    chats: {
+                        include:{
+                            participants: true,
+                            messages: {
+                                orderBy:{
+                                  createdAt: "asc"
+                                }
+                              }
+                          }
+                    }
+                }
+            });
+                 
+
+
+            io.to(data.fromID).emit('friendDeleted',  {username: data.toName, friends:senderFriends.friends, chats:senderFriends.chats, byMe:true});
+            io.to(data.toID).emit('friendDeleted', {username: data.fromName, friends:receiverFriends.friends, chats: receiverFriends.chats, byMe:false});
+
+            
+        }catch(error){
+            console.error('Error deleting friend:', error);
+        }        
+    });
+
 
     socket.on('disconnect', () => {
         console.log(`User disconnected: ${socket.user.username}`);

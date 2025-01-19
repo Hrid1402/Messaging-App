@@ -1,0 +1,16 @@
+.friendProfileContainer{
+    display: flex;
+    flex-direction: column;
+    color: black;
+    align-items: center;
+    padding-top: 45px;
+}
+.friendProfileContainer img{
+    height: 250px;
+    width: 250px;
+    border-radius: 50%;
+    object-fit: content;
+}
+.rodal-dialog{
+    overflow-y: auto;
+}

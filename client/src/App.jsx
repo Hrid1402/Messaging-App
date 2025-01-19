@@ -13,9 +13,12 @@ import ChatsList from './components/ChatsList.jsx'
 import noPicture from './assets/noPicturePfp.png'
 import { ToastContainer} from 'react-toastify';
 import MainChat from './components/MainChat.jsx';
+import UserProfile from './components/UserProfile.jsx'
 
 function App() {
   const [user, setUser] = useState(null);
+  const [userProfileDialog, setUserProfileDialog] = useState(false);
+
   const [openDialog_fr, setOpenDialog_fr] = useState(false);
   const [openDialog_pr, setOpenDialog_pr] = useState(false);
   const [openDialog_mf, setOpenDialog_mf] = useState(false);
@@ -35,14 +38,19 @@ function App() {
     setChats(newChatsList);
   }
 
-  function updateCurrentChatData(newCurrentChatData){
-    setChats(prevChats => prevChats.map(chat=> 
+  function updateCurrentChatData(newCurrentChatData, allChats){
+    setChats(allChats.map(chat=>
       chat.id === newCurrentChatData.id ? newCurrentChatData : chat));
   }
 
   function changeCurrentChat(newCurrentChatData, friend){
     setCurrentChatData({chat:newCurrentChatData, friend:friend});
   }
+  function emptyCurrentChat(){
+    console.log("empty chat runned");
+    setCurrentChatData(null);
+  }
+
 
   useEffect(()=>{
     axios.get(`${import.meta.env.VITE_SERVER_URL}/auth/user`, {
@@ -65,7 +73,7 @@ function App() {
         user ? 
         <>
          <Rodal visible={openDialog_fr} onClose={()=>setOpenDialog_fr(false)} height={600} width={430}>
-            <AddFriend user={user} socket={socket} updateFriends={updateFriends} friends={myFriends} updateChats={updateChats}/>
+            <AddFriend user={user} socket={socket} updateFriends={updateFriends} friends={myFriends} updateChats={updateChats} emptyCurrentChat={emptyCurrentChat}/>
           </Rodal>
 
           <Rodal visible={openDialog_pr} onClose={()=>setOpenDialog_pr(false)} height={600} width={430}>
@@ -75,15 +83,19 @@ function App() {
           <Rodal visible={openDialog_mf} onClose={()=>setOpenDialog_mf(false)} height={600} width={430}>
             <MyFriends user={user} socket={socket} myFriends={myFriends}/>
           </Rodal>
+
+          <Rodal visible={userProfileDialog} onClose={()=>setUserProfileDialog(false)} height={600} width={630}>
+            <UserProfile user={user} logout={()=>{Cookies.remove("jwt"), navigate(0)}} isOpen={userProfileDialog}/>
+          </Rodal>
           <main className='content'>
             <aside>
-              <div className='accountInf'>
+              <h2>Account</h2>
+              <button className='accountInf' onClick={()=>setUserProfileDialog(true)}>
                 <div className='account'>
                   <img src={user.picture ?? noPicture} alt="profile picture" />
                   <h2>{user.username}</h2>
                 </div>
-                <button onClick={()=>{Cookies.remove("jwt"), navigate(0)}}>Log out</button>
-              </div>
+              </button>
               <div className='friendsInf'>
                 <h2>Friends</h2>
                 <button onClick={()=>setOpenDialog_mf(true)}>My Friends</button>
@@ -92,11 +104,11 @@ function App() {
               </div>
               <div>
                 <h2>Messages</h2>
-                <ChatsList chats={chats} user={user} changeCurrentChat={changeCurrentChat}/>
+                <ChatsList chats={chats} user={user} changeCurrentChat={changeCurrentChat} currentChat={currentChatData ? currentChatData.chat : null} friends={myFriends}/>
               </div>
             </aside>
             <section>
-              {currentChatData ? <MainChat chat={currentChatData.chat} friend={currentChatData.friend} user={user} socket={socket} updateCurrentChatData={updateCurrentChatData} chats={chats} /> : null}
+              <MainChat chat={currentChatData ? currentChatData.chat : null} friend={currentChatData ? currentChatData.friend : null} user={user} socket={socket} updateCurrentChatData={updateCurrentChatData} chats={chats}/>
             </section>
           </main>
         </>: 

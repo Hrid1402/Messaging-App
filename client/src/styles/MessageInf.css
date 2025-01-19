@@ -1,0 +1,20 @@
+.messageInformation{
+    padding: 25px;
+    color: black;
+    display: flex;
+    flex-direction: column;
+}
+.MI_Title{
+    font-size: 35px;
+}
+.MI_Content{
+    font-size: 20px;
+    font-weight: 400;
+}
+.dateTime{
+    margin: 0;
+}
+.dateTimeText{
+    margin-top: 0;
+    font-weight: 400;
+}

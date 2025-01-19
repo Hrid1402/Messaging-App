@@ -1,0 +1,53 @@
+.userProfileContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.UP_pfp{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 300px;
+    width: 300px;
+    background-color: transparent;
+    border: 0;
+    padding: 0;
+    margin: 0;
+}
+.UP_pfp:active, .UP_pfp::selection{
+    border: 0;
+}
+.UP_pfp .currentPFP{
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid black;
+}
+.UP_pfp .addPhotoIcon{
+    opacity: 0;
+    position: absolute;
+    height: 60%;
+    width: 60%;
+    transition: opacity 0.4s;
+}
+.UP_pfp:hover .currentPFP{
+    opacity: 0.5;
+    transition: opacity 0.4s;
+}
+.UP_pfp:hover .addPhotoIcon{
+    opacity: 0.8;
+    transition: opacity 0.4s;
+    cursor: pointer;
+}
+.reactEasyCrop_CropArea{
+    border-radius: 50%;
+}
+.changedPFP{
+    height: 250px;
+    width: 250px;
+    border-radius: 50%;
+    object-fit: cover;
+}

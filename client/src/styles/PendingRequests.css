@@ -29,3 +29,6 @@
     flex-direction: column;
     gap: 5px;
 }
+.rodal-dialog{
+    overflow-y: auto;
+}

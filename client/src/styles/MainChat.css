@@ -11,9 +11,9 @@
 }
 .friendUserDataBTN img{
     border-radius: 50%;
-    height: 80px;
-    width: 80px;
-    object-fit: contain;
+    height: 90px;
+    width: 90px;
+    object-fit: cover;
 }
 .MainChatContainer{
     display: flex;
@@ -25,7 +25,13 @@
     display: grid;
     gap: 25px;
     bottom: 0;
-    grid-template-columns: 3fr 1fr;
+    grid-template-columns: 3fr 0.2fr 0.2fr 1fr;
+}
+
+.InputArea .prevIMG{
+    height: 40vh;
+    width: 100%;
+    object-fit: contain;
 }
 
 .InputArea textarea{
@@ -37,7 +43,12 @@
     height: auto;
     field-sizing: content;
 }
-
+.sendImageArea{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
 .allMessagesContainer{
     display: flex;
     flex-direction: column;
@@ -46,20 +57,82 @@
     flex: 1;
     gap: 5px;
     padding: 15px;
+    scroll-behavior: smooth;
 }
 .message{
-    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-    font-weight: 400;
     display: flex;
-    padding: 0px 20px;
-    border-radius: 35px;
-    font-size: 12px;
+    padding: 0px;
+    border-radius: 20px;
+    overflow-wrap: break-word;
+    width: fit-content;
+    white-space: normal;
     align-self: start;
     flex-direction: column;
     text-align: start;
-    width: fit-content;
-    background-color: rgb(48, 48, 48);
+    max-width: 40vw;
+    background-color: rgb(17, 1, 105);
+}
+.message .messageContent{
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+    margin-bottom: 0;
+    padding: 0px 20px;
+}
+.messageDateShort{
+    margin: 0;
+    font-weight: 200;
+    font-size: 12px;
+    margin-bottom: 5px;
+    color: rgba(255, 255, 255, 0.863);
 }
 .messageSendedByMe{
     align-self: end;
+    background-color: rgb(48, 48, 48);
+}
+.messageSendedByMe .messageDateShort{
+    align-self: end;
+}
+.messageBottom{
+    padding-left: 20px;
+    padding-right: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+.messageConfig{
+    background-color: transparent;
+    margin: 0;
+    padding: 0;
+    border: none;
+    transition: transform 0.3s;
+}
+.messageConfig:hover{
+    transition: transform 0.2s;
+    border: none;
+    transform: scale(1.2);
+}
+.messageConfig img{
+    filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(241deg) brightness(104%) contrast(101%);
+}
+.messageDeleted{
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+    padding: 0px 10px;
+    color: rgb(165, 165, 165);
+}
+.messageEdited{
+    margin: 0;
+    font-weight: 200;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.863);
+    display: flex;
+    padding: 10px 25px 0px 25px;
+    flex-direction: row;
+    justify-content: end;
+}
+.rodal-dialog{
+    overflow-y: auto;
 }

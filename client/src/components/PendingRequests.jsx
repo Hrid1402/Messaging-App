@@ -26,6 +26,7 @@ function PendingRequests({user, socket, updateFriends, updateChats}) {
       toast(`Request from ${data.from} declined.`);
       setFriendRequests(data.received);
     });
+
   },[socket])
 
   function acceptFriendRequest(friend){

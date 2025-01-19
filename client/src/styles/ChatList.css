@@ -13,12 +13,19 @@
 }
 .chatListBTN img{
     border-radius: 50%;
-    height: 65px;
-    width: 65px;
-    object-fit: contain;
+    height: 75px;
+    width: 75px;
+    object-fit: cover;
 }
 .chatListBTN h1{
     font-size: 32px;
+}
+.chatModification::after{
+    content: "";
+    height: 25px;
+    width: 25px;
+    border-radius: 50%;
+    background-color: rgb(97, 205, 255);
 }
 .chatListBTN:hover{
     border: 3px solid gray;

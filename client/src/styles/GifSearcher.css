@@ -1,0 +1,36 @@
+.gifTitle{
+    color: black;
+    font-size: 25px;
+}
+.resultsGif, .gifNoFound{
+    color: black;
+}
+.results .gif {
+    background-color: transparent;
+    padding: 0;
+    margin: 10px 0;
+    border: none;
+    transition: filter 0.4s;
+    display: block; 
+}
+  
+.results .gif img {
+    width: 100%;
+    object-fit: contain;
+    display: block;
+    border: none;
+}
+.gif:hover{
+    transition: filter 0.2s;
+    filter: brightness(0.6);
+    cursor: pointer;
+}
+.results{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-left: -10px;
+}
+.results .results-column {
+    padding-left: 10px; /* Adjust space between columns */
+  }

@@ -36,9 +36,9 @@ section{
 }
 .account img{
   border-radius: 50%;
-  height: 55px;
-  width: 55px;
-  object-fit: contain;
+  height: 75px;
+  width: 75px;
+  object-fit: cover;
 }
 /*Main Part - friendsInf*/
 .friendsInf .friendsTxt{
@@ -78,4 +78,7 @@ section{
 .userToAdd img{
   border-radius: 50%;
   height: 70px;
+}
+.rodal-dialog{
+  overflow-y: auto;
 }

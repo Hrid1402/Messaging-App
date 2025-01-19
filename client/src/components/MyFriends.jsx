@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import noPicture from '../assets/noPicturePfp.png'
 
-function MyFriends({user, socket, myFriends}) {
+function MyFriends({myFriends}) {
     
   return (
     <>

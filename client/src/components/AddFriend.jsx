@@ -4,7 +4,7 @@ import Cookies from 'js-cookie'
 import noPicture from '../assets/noPicturePfp.png'
 import {toast} from 'react-toastify';
 
-function AddFriend({user, socket, updateFriends, friends, updateChats}) {
+function AddFriend({user, socket, updateFriends, friends, updateChats, emptyCurrentChat}) {
     const [searchedUser, setSearchedUser] = useState("");
     const [showSearch, setShowSearch] = useState(false);
     const [searchedFriends, setSearchedFriends] = useState([]);
@@ -36,6 +36,23 @@ function AddFriend({user, socket, updateFriends, friends, updateChats}) {
           });
           setSendedRequest(data.sended);
         });
+
+        socket.on('friendDeleted', (data)=>{
+          console.log(data);
+          updateFriends(data.friends);
+          updateChats(data.chats);
+          emptyCurrentChat();
+          if(data.byMe){
+            toast.success("You Deleted " + data.username, {
+              icon: false
+            });
+          }else{
+            toast.warn(data.username + " deleted you.", {
+              icon: false
+            });
+          }
+      
+    });
       },[socket])
 
 
