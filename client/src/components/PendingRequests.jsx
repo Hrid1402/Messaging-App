@@ -1,11 +1,19 @@
 import React, {useEffect, useState} from 'react'
 import noPicture from '../assets/noPicturePfp.png'
+import FriendProfile from './FriendProfile.jsx';
 import {toast} from 'react-toastify';
 import '../styles/PendingRequests.css'
 
 
-function PendingRequests({user, socket, updateFriends, updateChats}) {
+function PendingRequests({isOpen, user, socket, updateFriends, updateChats}) {
   const [friendRequests, setFriendRequests] = useState(user.received);
+
+  const [friendData, setFriendData] = useState(null);
+  const [showFriendData, setShowFriendData] = useState(false);
+
+  useEffect(()=>{
+    setShowFriendData(false);
+  }, [isOpen]);
 
   useEffect(()=>{
     socket.on('updateFriendRequests', (data) => {
@@ -39,21 +47,30 @@ function PendingRequests({user, socket, updateFriends, updateChats}) {
     socket.emit('declineFriendRequest', { fromID : friend.fromID, toID: user.id, fromName: friend.fromName, toName: user.username});
   }
 
+  if(showFriendData){
+    return(
+      <>
+        <FriendProfile id={friendData.id} username={friendData.username} pfp={friendData.pfp} description={friendData.description} simple={true}></FriendProfile>
+        <button onClick={()=>setShowFriendData(false)}>Return</button>
+      </>
+    )
+  }
+
   return (
     <>
       <h1>Pending Requests</h1>
       <div className='PR_container'>
       {friendRequests.length != 0 ? 
-        friendRequests.map(r=>{
+        friendRequests.map(f=>{
           return (
-            <div key={r.id} className='pendingRequest'>
-              <div className="PR_User">
-                <img src={r.picture ?? noPicture} />
-                <h2>{r.fromName}</h2>
+            <div key={f.id} className='pendingRequest'role="button" tabIndex={0} onClick={()=>{setShowFriendData(true), setFriendData({id: f.from.id, username: f.from.username, description: f.from.description, pfp: f.from.picture})}}>
+              <div className="PR_User"> 
+                <img src={f.from.picture ?? noPicture} />
+                <h2>{f.fromName}</h2>
               </div>
               <div className='PR_btns'>
-                <button onClick={()=>acceptFriendRequest(r)}>Accept</button>
-                <button onClick={()=>declineFriendRequest(r)}>Decline</button>
+                <button onClick={(e)=>{e.stopPropagation(), acceptFriendRequest(f)}}>Accept</button>
+                <button onClick={(e)=>{e.stopPropagation(), declineFriendRequest(f)}}>Decline</button>
               </div>
             </div>
           )

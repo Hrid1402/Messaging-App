@@ -15,7 +15,7 @@ function ChatsList({chats, user, changeCurrentChat, currentChat, friends}) {
                     return(
                         <button key={c.id} className={`chatListBTN chatModification ${isSelected ? 'chatListBTN_ACTIVE' : ''}`} onClick={()=>changeCurrentChat(c, friend)} disabled={isSelected}>
                             <img src={friend.picture ?? noPicture} />
-                            <h1>{friend.username}</h1>
+                            <h1 className='btnUsername'>{friend.username}</h1>
                         </button>
                     )
                 }

@@ -1,47 +1,91 @@
+:root{
+    --chatColor: #192e52;
+    --inputColor: rgb(218, 223, 224);
+    --myMessageColor: #3797f0;
+    --friendMessageColor: #226ad3;
+    --deletedMessageTextColor: #96d3fa;
+}
 .headerFriendData{
-    background-color: red;
     width: 100%;
 }
 .friendUserDataBTN{
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 25px;
+    gap: 5px;
+    padding: 10px;
+    width: 100%;
+    border-radius: 0;
+    box-shadow: 0px 15px 17px -6px rgba(0,0,0,0.33);
+}
+.friendUserDataBTN h1{
+    font-size: min(10vw, 2.2rem);
+    overflow: visible;
+    white-space: normal;
+    margin: 0;
+    word-wrap: break-word;
 
 }
 .friendUserDataBTN img{
+    border: 2px solid #0f1e387e;
     border-radius: 50%;
-    height: 90px;
-    width: 90px;
+    max-height: 90px;
+    max-width: 90px;
+    height: 20vw;
+    width: 20vw;
     object-fit: cover;
 }
 .MainChatContainer{
     display: flex;
     flex-direction: column;
     height: 100vh;
+    background-color: var(--chatColor);
 }
 .InputArea{
-    padding: 25px;
+    background-color: var(--inputColor);
+    border-radius: 10px;
+    margin-right: 10px;
+    margin-left: 10px;
+    margin-bottom: 16px;
     display: grid;
-    gap: 25px;
+    gap: 5px;
     bottom: 0;
-    grid-template-columns: 3fr 0.2fr 0.2fr 1fr;
+    grid-template-columns: 1fr auto auto auto;
 }
-
+.imageBTNS{
+    place-self: center;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-right: 15px;
+    
+}
 .InputArea .prevIMG{
-    height: 40vh;
+    padding: 15px;
+    max-height: 40vh;
+    height: auto;
     width: 100%;
     object-fit: contain;
 }
 
 .InputArea textarea{
+    border: none;
+    line-height: 43px;
+    background-color: transparent;
+    border-radius: 10px;
     resize: none;
-    font-size: 20px;
-    padding: 5px;
+    font-size: 22px;
+    padding-top: 7px;
+    padding-left: 15px;
+    padding-bottom: 7px;
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
     font-weight: 400;
     height: auto;
     field-sizing: content;
+    outline: none;
+}
+.InputArea textarea:focus{
+    border: none;
 }
 .sendImageArea{
     display: flex;
@@ -52,12 +96,19 @@
 .allMessagesContainer{
     display: flex;
     flex-direction: column;
-    background-color: rgb(40, 66, 0);
     overflow-y: auto;
     flex: 1;
     gap: 5px;
     padding: 15px;
     scroll-behavior: smooth;
+}
+
+.allMessagesContainer::-webkit-scrollbar {
+    width: 10px;
+}
+      
+.allMessagesContainer::-webkit-scrollbar-thumb {
+    border-radius: 8px;
 }
 .message{
     display: flex;
@@ -70,12 +121,16 @@
     flex-direction: column;
     text-align: start;
     max-width: 40vw;
-    background-color: rgb(17, 1, 105);
+    background-color: var(--friendMessageColor);
 }
+.message img{
+    box-shadow: 0px 0px 22px -6px rgba(0,0,0,0.75);
+}
+
 .message .messageContent{
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
     font-weight: 500;
-    font-size: 18px;
+    font-size: clamp(1rem, 1vw, 2rem);
     margin-bottom: 0;
     padding: 0px 20px;
 }
@@ -88,7 +143,7 @@
 }
 .messageSendedByMe{
     align-self: end;
-    background-color: rgb(48, 48, 48);
+    background-color: var(--myMessageColor);
 }
 .messageSendedByMe .messageDateShort{
     align-self: end;
@@ -114,6 +169,7 @@
     transform: scale(1.2);
 }
 .messageConfig img{
+    box-shadow: none;
     filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(241deg) brightness(104%) contrast(101%);
 }
 .messageDeleted{
@@ -121,7 +177,7 @@
     font-weight: 500;
     font-size: 18px;
     padding: 0px 10px;
-    color: rgb(165, 165, 165);
+    color: var(--deletedMessageTextColor);
 }
 .messageEdited{
     margin: 0;
@@ -135,4 +191,43 @@
 }
 .rodal-dialog{
     overflow-y: auto;
+}
+.loadingMessage{
+    background-color: rgba(48, 48, 48, 0.514);
+}
+.loadingMessage h2{
+    padding-bottom: 16px !important;
+}
+.image_btn, .gif_btn, .send_btn{
+    background-color: transparent;
+    margin: 0;
+    padding: 0;
+    border: none;
+    outline: none;
+    transition: transform 0.3s;
+}
+.image_btn:hover, .gif_btn:hover, .send_btn:hover{
+    transition: transform 0.2s;
+    transform: scale(1.2);
+}
+.image_btn img, .gif_btn img, .send_btn img{
+    height: auto;
+    padding: 0px 0.2vw;
+    width: max(2.2rem, 2vw);
+}
+@media (width<=870px) {
+    .message{
+        max-width: 70vw;
+    }
+}
+
+.allMessagesContainer::-webkit-scrollbar-thumb {
+    background: #3797f0;
+}
+
+.snapTalk_intr{
+
+}
+.talk{
+    color:#3797f0;
 }

@@ -13,6 +13,17 @@
     transition: filter 0.4s;
     display: block; 
 }
+.gifInput{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.gifInput input{
+    padding: 5px 10px;
+    border-radius: 8px;
+    height: 26px;
+    font-size: 25px;
+}
   
 .results .gif img {
     width: 100%;
@@ -28,7 +39,6 @@
 .results{
     display: flex;
     justify-content: center;
-    flex-wrap: wrap;
     margin-left: -10px;
 }
 .results .results-column {

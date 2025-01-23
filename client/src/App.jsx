@@ -11,9 +11,13 @@ import PendingRequests from './components/PendingRequests.jsx'
 import MyFriends from './components/MyFriends.jsx'
 import ChatsList from './components/ChatsList.jsx'
 import noPicture from './assets/noPicturePfp.png'
-import { ToastContainer} from 'react-toastify';
-import MainChat from './components/MainChat.jsx';
+import addFriend from './assets/addFriend.svg'
+import friendsIcon from './assets/friendsIcon.svg'
+import requestIcon from './assets/requestIcon.svg'
+import { ToastContainer} from 'react-toastify'
+import MainChat from './components/MainChat.jsx'
 import UserProfile from './components/UserProfile.jsx'
+import 'ldrs/infinity'
 
 function App() {
   const [user, setUser] = useState(null);
@@ -28,7 +32,17 @@ function App() {
   const [chats, setChats] = useState([]);
   const [currentChatData, setCurrentChatData] = useState(null);
 
+  const [loading, setLoading] = useState(true);
+
+  const [sideBarOpen, setSideBarOpen] = useState(true);
+
+  const sideBarRef = useRef(null);
+
   const navigate = useNavigate();
+
+  function toggleSideBar(){
+    setSideBarOpen(!sideBarOpen);
+  }
 
   function updateFriends(newFriendList){
     setMyFriends(newFriendList);
@@ -51,45 +65,77 @@ function App() {
     setCurrentChatData(null);
   }
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (sideBarRef.current && sideBarRef.current.contains(event.target)) {
+        toggleSideBar();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   useEffect(()=>{
-    axios.get(`${import.meta.env.VITE_SERVER_URL}/auth/user`, {
-      headers: {
-          Authorization: `Bearer ${Cookies.get("jwt")}`,
-          "Content-Type": "application/json"
-      }}).then(r=>{
+    const fetchUserData = async() => {
+      try{
+        const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/auth/user`, {
+          headers: {
+              Authorization: `Bearer ${Cookies.get("jwt")}`,
+              "Content-Type": "application/json"
+          }})
+        const data = response.data;
         connectSocket(Cookies.get("jwt"));
-        setUser(r.data)
-        setMyFriends(r.data.friends);
-        setChats(r.data.chats);
-        console.log(`Logged as ${r.data.username}`);
-        console.log(r.data)
-      }).catch(err=>{console.log(err.response.data)});
+        setUser(data)
+        setMyFriends(data.friends);
+        setChats(data.chats);
+        console.log(`Logged as ${data.username}`);
+        console.log(data)
+      }catch(error){
+        console.log("Error fetching user data:",error)
+      }finally{
+        setLoading(false);
+      }
+    }
+    fetchUserData(); 
   },[])
   return (
     <>
-      <ToastContainer autoClose={5000}/>
+      <ToastContainer autoClose={5000} pauseOnHover={false} pauseOnFocusLoss={false}/>
       {
+        loading ? 
+        <l-infinity
+        size="105"
+        stroke="4"
+        stroke-length="0.15"
+        bg-opacity="0.1"
+        speed="1.3"
+        color="white" 
+        ></l-infinity>
+      :
         user ? 
         <>
-         <Rodal visible={openDialog_fr} onClose={()=>setOpenDialog_fr(false)} height={600} width={430}>
-            <AddFriend user={user} socket={socket} updateFriends={updateFriends} friends={myFriends} updateChats={updateChats} emptyCurrentChat={emptyCurrentChat}/>
+         <Rodal visible={openDialog_fr} onClose={()=>setOpenDialog_fr(false)} customStyles={{maxWidth:'430px',width:'80vw', height:'60vh'}}>
+            <AddFriend isOpen={openDialog_fr} user={user} socket={socket} updateFriends={updateFriends} friends={myFriends} updateChats={updateChats} emptyCurrentChat={emptyCurrentChat}/>
           </Rodal>
 
-          <Rodal visible={openDialog_pr} onClose={()=>setOpenDialog_pr(false)} height={600} width={430}>
-            <PendingRequests user={user} socket={socket} updateFriends={updateFriends} updateChats={updateChats}/>
+          <Rodal visible={openDialog_pr} onClose={()=>setOpenDialog_pr(false)} customStyles={{maxWidth:'430px',width:'80vw', height:'60vh'}}>
+            <PendingRequests isOpen={openDialog_pr} user={user} socket={socket} updateFriends={updateFriends} updateChats={updateChats}/>
           </Rodal>
 
-          <Rodal visible={openDialog_mf} onClose={()=>setOpenDialog_mf(false)} height={600} width={430}>
-            <MyFriends user={user} socket={socket} myFriends={myFriends}/>
+          <Rodal visible={openDialog_mf} onClose={()=>setOpenDialog_mf(false)} customStyles={{maxWidth:'430px',width:'80vw', height:'60vh'}}>
+            <MyFriends isOpen={openDialog_mf} user={user} socket={socket} myFriends={myFriends}/>
           </Rodal>
 
-          <Rodal visible={userProfileDialog} onClose={()=>setUserProfileDialog(false)} height={600} width={630}>
+          <Rodal visible={userProfileDialog} onClose={()=>setUserProfileDialog(false)} customStyles={{maxWidth:'430px',width:'80vw', height:'75vh'}}>
             <UserProfile user={user} logout={()=>{Cookies.remove("jwt"), navigate(0)}} isOpen={userProfileDialog}/>
           </Rodal>
-          <main className='content'>
-            <aside>
-              <h2>Account</h2>
+          <main className='content' >
+            <div ref={sideBarRef} className={`backgroundSideBar ${sideBarOpen ? '' : 'none'}`} ></div>
+            <button className='sideBarButton' onClick={()=>toggleSideBar()}></button>
+            <aside className={`sideBar ${sideBarOpen ? '' : 'closed'}`}>
               <button className='accountInf' onClick={()=>setUserProfileDialog(true)}>
                 <div className='account'>
                   <img src={user.picture ?? noPicture} alt="profile picture" />
@@ -97,13 +143,13 @@ function App() {
                 </div>
               </button>
               <div className='friendsInf'>
-                <h2>Friends</h2>
-                <button onClick={()=>setOpenDialog_mf(true)}>My Friends</button>
-                <button onClick={()=>setOpenDialog_fr(true)}>Add Friend</button>
-                <button onClick={()=>setOpenDialog_pr(true)}>Pending Requests</button>
+                <button onClick={()=>setOpenDialog_fr(true)}><img src={addFriend}/> Add Friend</button>
+                <button onClick={()=>setOpenDialog_pr(true)}><img src={requestIcon}></img> Pending Requests</button>
+                <button onClick={()=>setOpenDialog_mf(true)}><img src={friendsIcon}></img> My Friends</button>
+                
               </div>
               <div>
-                <h2>Messages</h2>
+                <h2>Chats</h2>
                 <ChatsList chats={chats} user={user} changeCurrentChat={changeCurrentChat} currentChat={currentChatData ? currentChatData.chat : null} friends={myFriends}/>
               </div>
             </aside>

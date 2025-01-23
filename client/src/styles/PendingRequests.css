@@ -6,10 +6,21 @@
 .pendingRequest{
     display: flex;  
     align-items: center;
-    justify-content: space-between;
-    background-color: rgb(168, 168, 243);
-    padding: 15px;
     border-radius: 15px;
+    padding: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    color:#eff8ff;
+    background-color: var(--mainColor);
+    border: 2px solid var(--borderUserColor);
+    transition: border 0.4s;
+    word-break: break-word;
+}
+.pendingRequest:hover{
+    cursor: pointer;
+    transition: border 0.2s;
+    border: 2px solid #192e52;
 }
 .PR_User{
     display: flex;
@@ -20,14 +31,27 @@
 
 .PR_User img{
     border-radius: 50%;
-    height: 65px;
-    width: 65px;
-    object-fit: contain;
+    border: 2px solid #0f1e387e;    
+    height: min(14vw, 4rem);
+    width: min(14vw, 4rem);
+    object-fit: cover;
+    border: 2px solid var(--borderUserColor);
 }
 .PR_btns{
     display: flex;
     flex-direction: column;
     gap: 5px;
+}
+.PR_btns button{
+    transition: background-color 0.3s, color 0.3s;
+    background-color: #c1e3fc;
+    border: 1px solid var(--borderUserColor);
+    color:  var(--borderUserColor);
+}
+.PR_btns button:hover{
+    transition: background-color 0.2s, color 0.2s;
+    background-color: var(--borderUserColor);
+    color:  #c1e3fc;
 }
 .rodal-dialog{
     overflow-y: auto;

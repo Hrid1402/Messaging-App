@@ -1,7 +1,24 @@
 .userProfileContainer{
     display: flex;
+    height: 100%;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+}
+.profileTXT{
+    margin-top: 0px;
+    margin-bottom: 10px;
+}
+.pfUsername{
+    margin-top: 7px;
+    margin-bottom: 15px;
+}
+.pf_descrTxt{
+    margin-top: 0;
+    margin-bottom: 0;
+}
+.pf_descr{
+    margin-top: 5px;
 }
 .UP_pfp{
     position: relative;
@@ -9,8 +26,8 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 300px;
-    width: 300px;
+    height: 220px;
+    width: 220px;
     background-color: transparent;
     border: 0;
     padding: 0;

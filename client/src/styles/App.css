@@ -1,8 +1,16 @@
 #root {
   width: 100%;
-  margin: 0 auto;
   text-align: center;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow-y: hidden;
 }
+:root{
+  --asideColor: #2255ab;
+}
+
+body, html {margin: 0;padding: 0; height: 100%;}
 /*Main Part*/
 .content{
   color: white;
@@ -13,20 +21,34 @@
   width: 100%;
 }
 aside{
-  padding: 25px;
-  background-color: green;
+  background-color: var(--asideColor);
 }
 section{
-  background-color: blue;
-  height: 100%;
+  background-color: #192e52;
 }
 /*Main Part - Account*/
 .accountInf{
+  width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  gap: 25px
+  gap: 25px;
+  background-color: #192e52;
+  border-bottom: solid #18181b 2px;
+  margin-bottom: 25px;
+  border-radius: 0;
+  transition: background-color 0.3s;
+  transition: border 0.3s;
+}
+.accountInf:hover{
+  border-bottom: solid #18181b 2px;
+  background-color: #18181b;
+  transition: background-color 0.2s;
+}
+.accountInf:hover .account img{
+  border: 2px solid #eff8ff;
+  transition: border 0.2s;
 }
 .account{
   display: flex;
@@ -35,12 +57,34 @@ section{
   gap: 10px
 }
 .account img{
+  border: 2px solid #18181b;
   border-radius: 50%;
   height: 75px;
   width: 75px;
   object-fit: cover;
 }
+.account h2{
+  font-size: 25px;
+}
 /*Main Part - friendsInf*/
+.friendsInf{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: .85rem;
+}
+.friendsInf button{
+  margin: 0px 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+.friendsInf button img{
+  height: 30px;
+  width: 30px;
+  filter: invert(100%) sepia(4%) saturate(0%) hue-rotate(305deg) brightness(107%) contrast(104%);
+}
 .friendsInf .friendsTxt{
   color: black;
 }
@@ -81,4 +125,61 @@ section{
 }
 .rodal-dialog{
   overflow-y: auto;
+}
+.sideBar{
+  overflow-y: scroll;
+  z-index: 3;
+  height: 100vh;
+}
+.sideBarButton{
+  top: 1rem;
+  left: 1rem;
+  border-radius: 0;
+  background-color: var(--asideColor);
+  border: none;
+  cursor: pointer;
+  display: none;
+}
+.closed{
+  transform: translateX(-100%);
+}
+.none{
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+.hidden{
+  display: none;
+}
+.backgroundSideBar{
+  display: none;
+}
+@media (width<=870px) {
+  .sideBar{
+    position: fixed;
+    transition: transform 0.3s ease-in-out;
+    width: 80%;
+  }
+  .content{
+    grid-template-columns: 0.5fr 3fr;
+    background-color: red;
+  }
+
+  .sideBarButton{
+    display: block;
+  }
+  .backgroundSideBar{
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.493);
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    opacity: 1;
+    z-index: 2;
+    transition: opacity 0.5s ease;
+    pointer-events: all;
+  }
 }

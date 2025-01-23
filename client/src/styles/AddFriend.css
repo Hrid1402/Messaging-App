@@ -1,0 +1,56 @@
+:root{
+    --borderUserColor: #226ad3;
+    --mainColor: #2b7fe5;
+}
+.userToAdd{
+    border-radius: 15px;
+    padding: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    color:#eff8ff;
+    background-color: var(--mainColor);
+    border: 2px solid var(--borderUserColor);
+    transition: border 0.4s;
+}
+.friendNamePfp h2 {
+    word-break: break-word;
+}
+.userToAdd:hover{
+    transition: border 0.2s;
+    border: 2px solid #192e52;
+}
+.userToAdd button{
+    transition: background-color 0.3s, color 0.3s;
+    background-color: #c1e3fc;
+    border: 1px solid var(--borderUserColor);
+    color:  var(--borderUserColor);
+    padding: 6px 10px;
+}
+.userToAdd button:hover:not(.userToAdd button:disabled){
+    transition: background-color 0.2s, color 0.2s;
+    background-color: var(--borderUserColor);
+    color:  #c1e3fc;
+}
+.userToAdd button:disabled{
+    background-color: var(--borderUserColor);
+    color:  #c1e3fc;
+}
+.userToAdd button:disabled:hover{
+    border: 1px solid var(--borderUserColor);
+}
+.userToAdd img{
+    border: 2px solid #0f1e387e;
+    height: min(14vw, 4rem);
+    width: min(14vw, 4rem);
+    object-fit: cover;
+}
+.userToAdd:hover{
+    cursor: pointer;
+}
+.friendNamePfp{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
+}

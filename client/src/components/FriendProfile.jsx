@@ -3,7 +3,7 @@ import noPicture from '../assets/noPicturePfp.png'
 import '../styles/FriendProfile.css'
 
 
-function FriendProfile({id, username, description ,pfp, socket, myID, myUsername}) {
+function FriendProfile({simple=false, id, username, description ,pfp, socket, myID, myUsername}) {
 
   function removeFriend(){
     console.log("Removing " + username);
@@ -14,7 +14,7 @@ function FriendProfile({id, username, description ,pfp, socket, myID, myUsername
         <img src={pfp ?? noPicture} />
         <h1>{username}</h1>
         {description && <h2>{description}</h2>}
-        <button onClick={()=>removeFriend()}>Remove friend</button>
+        {!simple && <button onClick={()=>removeFriend()}>Remove friend</button>}
     </div>
   )
 }
