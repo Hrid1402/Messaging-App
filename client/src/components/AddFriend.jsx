@@ -30,30 +30,36 @@ function AddFriend({isOpen, user, socket, updateFriends, friends, updateChats, e
 
 
     useEffect(()=>{
-        socket.on('updateFriendRequestsSended', (data) => {
+        const handleUpdateFriendRequestsSended = (data) => {
           console.log(data);
           toast("Request sent!");
           setLoadingAddFriend(false);
           setSendedRequest(data);
-        });
+        };
 
-        socket.on('updateAcceptedRequestSended', (data) => {
+        socket.on('updateFriendRequestsSended', handleUpdateFriendRequestsSended);
+
+        const handleUpdateAcceptedRequestSended = (data) => {
           console.log(data);
           toast.success(`${data.to} accepted your request!`);
           setSendedRequest(data.sended);
           updateFriends(data.friends);
           updateChats(data.chats);
-        });
+        };
 
-        socket.on('updateDeclinedRequestSended', (data) => {
+        socket.on('updateAcceptedRequestSended', handleUpdateAcceptedRequestSended);
+
+        const handleUpdateDeclinedRequestSended = (data) => {
           console.log(data);
           toast.warn(`${data.to} declined your request.`, {
             icon: false
           });
           setSendedRequest(data.sended);
-        });
+        }
 
-        socket.on('friendDeleted', (data)=>{
+        socket.on('updateDeclinedRequestSended', handleUpdateDeclinedRequestSended);
+
+        const handleFriendDeleted = (data) =>{
           console.log(data);
           updateFriends(data.friends);
           updateChats(data.chats);
@@ -67,8 +73,15 @@ function AddFriend({isOpen, user, socket, updateFriends, friends, updateChats, e
               icon: false
             });
           }
-      
-    });
+        }
+        socket.on('friendDeleted', handleFriendDeleted);
+
+        return () => {
+          socket.off('updateFriendRequestsSended', handleUpdateFriendRequestsSended);
+          socket.off('updateAcceptedRequestSended', handleUpdateAcceptedRequestSended);
+          socket.off('updateDeclinedRequestSended', handleUpdateDeclinedRequestSended);
+          socket.off('friendDeleted', handleFriendDeleted);
+        };
       },[socket])
 
 

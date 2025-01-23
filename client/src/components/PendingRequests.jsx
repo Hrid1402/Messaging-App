@@ -16,24 +16,34 @@ function PendingRequests({isOpen, user, socket, updateFriends, updateChats}) {
   }, [isOpen]);
 
   useEffect(()=>{
-    socket.on('updateFriendRequests', (data) => {
+
+    const handleUpdateFriendRequests = (data) =>{
       toast(`${data.from} wants to be friends!`);
       setFriendRequests(data.received);
-    });
+    }
+    socket.on('updateFriendRequests', handleUpdateFriendRequests);
 
-    socket.on('updateAcceptedRequest', (data) => {
+    const handleUpdateAcceptedRequest = (data) =>{
       console.log(data);
       toast.success(`Request from ${data.from} accepted!.`);
       setFriendRequests(data.received);
       updateFriends(data.friends);
       updateChats(data.chats);
-    });
+    }
+    socket.on('updateAcceptedRequest', handleUpdateAcceptedRequest);
 
-    socket.on('updateDeclinedRequest', (data) => {
+    const handleUpdateDeclinedRequest = (data) => {
       console.log(data);
       toast(`Request from ${data.from} declined.`);
       setFriendRequests(data.received);
-    });
+    }
+    socket.on('updateDeclinedRequest', handleUpdateDeclinedRequest);
+
+    return () =>{
+      socket.off('updateFriendRequests', handleUpdateFriendRequests);
+      socket.off('updateAcceptedRequest', handleUpdateAcceptedRequest);
+      socket.off('updateDeclinedRequest', handleUpdateDeclinedRequest);
+    }
 
   },[socket])
 
