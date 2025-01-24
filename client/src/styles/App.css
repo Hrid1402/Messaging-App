@@ -15,7 +15,7 @@ body, html {margin: 0;padding: 0; height: 100%;}
 .content{
   color: white;
   display: grid;
-  grid-template-columns: 1fr 3fr;
+  grid-template-columns: 1.5fr 3fr;
   background-color: red;
   height: 100vh;
   width: 100%;
@@ -74,11 +74,22 @@ section{
   gap: .85rem;
 }
 .friendsInf button{
+  line-height: 1.2;
+  word-break: break-word;
   margin: 0px 10px;
   display: flex;
+  text-align: start;
   flex-direction: row;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
+}
+.newChangeButton::after{
+  content: "";
+  margin-left: auto;
+  height: 18px;
+  width: 18px;
+  border-radius: 50%;
+  background-color: #64b9f6;
 }
 .friendsInf button img{
   height: 30px;

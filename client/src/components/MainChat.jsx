@@ -14,7 +14,7 @@ import axios from 'axios';
 import 'rodal/lib/rodal.css';
 
 
-function MainChat({chat, friend, user, socket, updateCurrentChatData, chats}) {
+function MainChat({chat, friend, user, socket, updateCurrentChatData, chats, modifiedChats, setModifiedChats}) {
     const [friendDialogOpen, setFriendDialogOpen] = useState(false);
     const [messageInfDialogOpen, setMessageInfDialogOpen] = useState(false);
     const [messageInfData, setMessageInfData] = useState(null);
@@ -51,10 +51,17 @@ function MainChat({chat, friend, user, socket, updateCurrentChatData, chats}) {
     useEffect(()=>{
         const handleMessage = (data) => {
             console.log("message received", data);
-            console.log('friend', friend);
-            console.log('curChat', currentChat);
-            console.log('chat', chat);
-            if(friend && friend.id === data.authorID){
+            const isFromCurrentChat = friend && friend.id === data.authorID
+            if(data.modifiedChats){
+                if(!isFromCurrentChat){
+                    setModifiedChats(data.modifiedChats);
+                }else{
+                    const newModifiedChats = modifiedChats.filter(c=>c.id === currentChat.id);
+                    socket.emit('updateModifiedChats', {userID: user.id, modifiedChats:newModifiedChats});
+                }
+                
+            }
+            if(isFromCurrentChat){
                 return
             }
             toast.info(
@@ -69,11 +76,21 @@ function MainChat({chat, friend, user, socket, updateCurrentChatData, chats}) {
                 { icon: false}
                 );
         }
+        
+        
         socket.on('messageNotification', handleMessage);
         return () => {
             socket.off("messageNotification", handleMessage);
         };
     }, [socket, friend])
+
+    useEffect(()=>{
+        if(currentChat && modifiedChats.includes(currentChat.id)){
+            const newModifiedChats = modifiedChats.filter(c=>c.id === currentChat.id);
+            setModifiedChats(newModifiedChats);
+            socket.emit('updateModifiedChats', {userID: user.id, modifiedChats:newModifiedChats});
+        }
+    }, [friend])
 
     useEffect(()=>{
         if(chat!=null){

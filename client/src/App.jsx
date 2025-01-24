@@ -27,7 +27,8 @@ function App() {
   const [openDialog_pr, setOpenDialog_pr] = useState(false);
   const [openDialog_mf, setOpenDialog_mf] = useState(false);
 
-
+  const [newRequests, setNewRequests]  = useState(false);
+  const [modifiedChats, setModifiedChats] = useState([]);
   const [myFriends, setMyFriends] = useState([]);
   const [chats, setChats] = useState([]);
   const [currentChatData, setCurrentChatData] = useState(null);
@@ -61,7 +62,6 @@ function App() {
     setCurrentChatData({chat:newCurrentChatData, friend:friend});
   }
   function emptyCurrentChat(){
-    console.log("empty chat runned");
     setCurrentChatData(null);
   }
 
@@ -91,6 +91,8 @@ function App() {
         setUser(data)
         setMyFriends(data.friends);
         setChats(data.chats);
+        setNewRequests(data.newRequests);
+        setModifiedChats(data.modifiedChats);
         console.log(`Logged as ${data.username}`);
         console.log(data)
       }catch(error){
@@ -122,7 +124,7 @@ function App() {
           </Rodal>
 
           <Rodal visible={openDialog_pr} onClose={()=>setOpenDialog_pr(false)} customStyles={{maxWidth:'430px',width:'80vw', height:'60vh'}}>
-            <PendingRequests isOpen={openDialog_pr} user={user} socket={socket} updateFriends={updateFriends} updateChats={updateChats}/>
+            <PendingRequests isOpen={openDialog_pr} user={user} socket={socket} updateFriends={updateFriends} updateChats={updateChats} setNewRequests={setNewRequests} newRequests={newRequests}/>
           </Rodal>
 
           <Rodal visible={openDialog_mf} onClose={()=>setOpenDialog_mf(false)} customStyles={{maxWidth:'430px',width:'80vw', height:'60vh'}}>
@@ -144,17 +146,17 @@ function App() {
               </button>
               <div className='friendsInf'>
                 <button onClick={()=>setOpenDialog_fr(true)}><img src={addFriend}/> Add Friend</button>
-                <button onClick={()=>setOpenDialog_pr(true)}><img src={requestIcon}></img> Pending Requests</button>
+                <button className={`${newRequests ? 'newChangeButton' : ''}`} onClick={()=>setOpenDialog_pr(true)}><img src={requestIcon}></img> Pending Requests</button>
                 <button onClick={()=>setOpenDialog_mf(true)}><img src={friendsIcon}></img> My Friends</button>
                 
               </div>
               <div>
                 <h2>Chats</h2>
-                <ChatsList chats={chats} user={user} changeCurrentChat={changeCurrentChat} currentChat={currentChatData ? currentChatData.chat : null} friends={myFriends}/>
+                <ChatsList chats={chats} user={user} changeCurrentChat={changeCurrentChat} currentChat={currentChatData ? currentChatData.chat : null} friends={myFriends} modifiedChats={modifiedChats} setModifiedChats={setModifiedChats}/>
               </div>
             </aside>
             <section>
-              <MainChat chat={currentChatData ? currentChatData.chat : null} friend={currentChatData ? currentChatData.friend : null} user={user} socket={socket} updateCurrentChatData={updateCurrentChatData} chats={chats}/>
+              <MainChat chat={currentChatData ? currentChatData.chat : null} friend={currentChatData ? currentChatData.friend : null} user={user} socket={socket} updateCurrentChatData={updateCurrentChatData} chats={chats} modifiedChats={modifiedChats} setModifiedChats={setModifiedChats}/>
             </section>
           </main>
         </>: 

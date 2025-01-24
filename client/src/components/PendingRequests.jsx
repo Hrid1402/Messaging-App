@@ -1,18 +1,41 @@
 import React, {useEffect, useState} from 'react'
 import noPicture from '../assets/noPicturePfp.png'
 import FriendProfile from './FriendProfile.jsx';
+import axios from 'axios'
 import {toast} from 'react-toastify';
 import '../styles/PendingRequests.css'
+import Cookies from 'js-cookie'
 
 
-function PendingRequests({isOpen, user, socket, updateFriends, updateChats}) {
+function PendingRequests({isOpen, user, socket, updateFriends, updateChats, setNewRequests, newRequests}) {
   const [friendRequests, setFriendRequests] = useState(user.received);
 
   const [friendData, setFriendData] = useState(null);
   const [showFriendData, setShowFriendData] = useState(false);
 
+  async function updateNewRequest(){
+    await axios.put(`${import.meta.env.VITE_SERVER_URL}/auth/user`,{
+      newRequests: false
+    },{
+      headers: {
+          Authorization: `Bearer ${Cookies.get("jwt")}`,
+          "Content-Type": "application/json"
+      }});
+  }
+
   useEffect(()=>{
     setShowFriendData(false);
+    if(isOpen){
+      if(newRequests){
+        try{
+          setNewRequests(false);
+          updateNewRequest();
+        }catch(error){
+          console.log("Error updating new request", error);
+        }
+      }
+      
+    }
   }, [isOpen]);
 
   useEffect(()=>{
@@ -20,6 +43,7 @@ function PendingRequests({isOpen, user, socket, updateFriends, updateChats}) {
     const handleUpdateFriendRequests = (data) =>{
       toast(`${data.from} wants to be friends!`);
       setFriendRequests(data.received);
+      setNewRequests(true);
     }
     socket.on('updateFriendRequests', handleUpdateFriendRequests);
 
