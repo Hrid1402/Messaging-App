@@ -48,7 +48,7 @@ function MessageInf({id, content, date, fromMe, image, socket, chatID, user, toI
         <h2 className='dateTime'>Time:</h2>
         <h2 className='dateTimeText'>{fullTime}</h2>
         {fromMe ? 
-        <div>
+        <div className='btns'>
             {!image ? <button onClick={()=>setEditMode(true)}>Edit</button> : null}
             <button onClick={()=>deleteMessage()}>Delete</button>
         </div> : null}

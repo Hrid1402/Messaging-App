@@ -1,6 +1,6 @@
 :root{
-    --borderUserColor: #226ad3;
-    --mainColor: #2b7fe5;
+    --borderUserColor: #24252d;
+    --mainColor: #363944;
 }
 .friendsContainer{
     display: flex;
@@ -16,12 +16,13 @@
     color:#eff8ff;
     background-color: var(--mainColor);
     border: 2px solid var(--borderUserColor);
-    transition: border 0.4s;
+    transition: border 0.3s, background-color 0.3s;
     word-break: break-word;
 }
 .friendBlock:hover{
-    transition: border 0.2s;
-    border: 2px solid #192e52;
+    transition: border 0.2s, background-color 0.2s;
+    background-color: #3d414f;
+    border: 2px solid var(--borderUserColor)
 }
 .friendBlock img{
     border-radius: 50%;
@@ -34,4 +35,49 @@
 
 .friendBlock h2 {
     word-break: break-word;
+}
+
+.chatNameInputFriends {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.chatNameInputFriends input{
+    padding: 10px 10px;
+    height: 43px;
+    border: none;
+    outline: none;
+    box-sizing: border-box;
+    width: 100%;
+    font-size: 24px;
+    border: 2px solid black;
+    border-radius: 8px;
+}
+
+.clearButtonFriends {
+    margin: 0;
+    padding: 0;
+    padding-right: 10px;
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    background: none;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.hidden{
+    display: none;
+  }
+.clearButtonFriends img{
+    transition: transform 0.3s;
+    height: 35px;
+    width: 35px;
+}
+.clearButtonFriends img:hover{
+    transition: transform 0.2s;
+    transform: scale(1.3);
 }

@@ -1,11 +1,21 @@
 :root{
-    --friendChatColor: rgb(56, 56, 56);
-    --friendChatColorHover: rgb(73, 73, 73);
-    --selectedFriendChatColor: rgb(151, 151, 151);
+    --friendChatColor: #242424;
+    --friendChatColorHover: #3a3a3a;
+    --selectedFriendChatColor: #747474;
+    --borderColor: #f6f7f9;
+    --borderPFPColor: #d0dfff46;
 }
 .allChats{
+    margin-top: 26px;
     display: flex;
     flex-direction: column;
+}
+.chatsTitle{
+    padding: 0;
+    margin: 0;
+    text-align: start;
+    font-size: 28px;
+    padding-left: 15px;
 }
 .chatListBTN{
     word-break: break-word;
@@ -17,15 +27,21 @@
     width: 100%;
     gap: 8px;
     background-color: var(--friendChatColor);
+    border-bottom: 1px solid var(--borderColor);
+}
+.chatListBTN:nth-child(3){
+    border-top: 1px solid var(--borderColor);
 }
 .chatListBTN:hover:not(.chatListBTN_ACTIVE){
+    border-color: var(--borderColor);
     background-color: var(--friendChatColorHover);
 }
 .btnUsername{
    font-size: 1.875em;
+   font-weight: 500;
 }
 .chatListBTN img{
-    border: 2px solid #0f1e387e;
+    border: 2px solid var(--borderPFPColor);
     border-radius: 50%;
     width: 28vw;
     height: 28vw;
@@ -35,11 +51,56 @@
 }
 .chatModification::after{
     content: "";
-    height: 25px;
-    width: 25px;
+    margin-left: auto;
+    height: 22px;
+    width: 22px;
     border-radius: 50%;
-    background-color: rgb(97, 205, 255);
+    background-color: #64b9f6;
 }
 .chatListBTN_ACTIVE{
     background-color: var(--selectedFriendChatColor)
+}
+
+.chatNameInput {
+    position: relative;
+    margin: 15px 10px;
+}
+
+.chatNameInput input{
+    padding: 10px 10px;
+    height: 43px;
+    border: none;
+    outline: none;
+    box-sizing: border-box;
+    width: 100%;
+    font-size: 24px;
+    border-radius: 8px;
+}
+
+.clearButton {
+    margin: 0;
+    padding: 0;
+    padding-right: 10px;
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    background: none;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.hidden{
+    display: none;
+  }
+.clearButton img{
+    transition: transform 0.3s;
+    height: 35px;
+    width: 35px;
+}
+.clearButton img:hover{
+    transition: transform 0.2s;
+    transform: scale(1.3);
 }

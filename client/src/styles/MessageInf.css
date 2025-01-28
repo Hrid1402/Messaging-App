@@ -2,14 +2,19 @@
     padding: 25px;
     color: black;
     display: flex;
+    align-items: center;
+    justify-content: center;
     flex-direction: column;
 }
 .MI_Title{
-    font-size: 35px;
+    font-size: 28px;
+    margin: 0;
+    margin-bottom: 15px;
 }
 .MI_Content{
     font-size: 20px;
     font-weight: 400;
+    margin: 0;
 }
 .dateTime{
     margin: 0;
@@ -17,4 +22,11 @@
 .dateTimeText{
     margin-top: 0;
     font-weight: 400;
+}
+.btns{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
 }

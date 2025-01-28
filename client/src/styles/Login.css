@@ -1,0 +1,49 @@
+.loginContainer{
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.login{
+    padding: 15px;
+    border-radius: 15px;
+    background-color: white;
+    width: 85vw;
+    max-width: 500px;
+    height: 80vh;
+}
+.LoginBlock{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 25px;
+}
+.LoginInputBlock{
+    display: flex;
+    width: 80%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+}
+.LoginInputBlock input{
+    border: 0;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.507);
+    height: 35px;
+    font-size: 23px;
+    width: 100%;
+    box-sizing: border-box;
+    padding-bottom: 5px;
+}
+.LoginInputBlock h2{
+    text-align: start;
+}
+.LoginInputBlock input:focus{
+    outline: none;
+    border-bottom: 2px solid black;
+}
+.LoginBlock button{
+    border-radius: 35px;
+    width: 80%;
+}

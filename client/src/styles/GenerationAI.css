@@ -1,0 +1,61 @@
+.AI_container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+.AI_container h1{
+    color: black;
+    font-size: 28px;
+    margin-bottom: 0;
+}
+.Generated{
+    max-width: 430px;
+    max-height: 430px;
+    height: 80vw;
+    width: 80vw;
+    box-shadow: rgb(100, 100, 111) 0px 7px 29px 0px;
+}
+.GenerateInput{
+    padding: 15px;
+    max-width: 500px;
+    width: 80vw;
+    overflow-y: hidden;
+    min-height: 40px;
+    height: auto;
+    resize: none;
+    font-size: min(22px, 5vw);
+    box-sizing: border-box;
+    border-radius: 12px;
+    field-sizing: content;
+}
+.generateBTN{   
+    max-width: 500px;
+    width: 80vw;
+    transition: filter 0.4s;
+    user-select: none;
+    border: none;
+    transition: transform 0.4s;
+    background-image: linear-gradient(144deg,#AF40FF, #5B42F3 50%,#00DDEB);
+}
+.full{
+    height: 100%;
+}
+.sendBTN{
+    max-width: 400px;
+    width: 80vw;
+    margin-bottom: 25px;
+}
+
+.generateBTN:hover {
+    transition: transform 0.2s;
+    border: none;
+    transform: scale(1.05);
+  }
+.generateBTN:disabled{
+    transition: filter 0.4s;
+    filter: grayscale(100%);
+    pointer-events: none;
+}
+
+

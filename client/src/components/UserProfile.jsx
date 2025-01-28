@@ -8,7 +8,7 @@ import {toast} from 'react-toastify';
 import 'ldrs/ring'
 import Cookies from 'js-cookie'
 
-function UserProfile({user, logout, isOpen}) {
+function UserProfile({user, isOpen}) {
     const inputFile = useRef(null)
     const [imageURL, setImageURL] = useState(null);
     const [croppedImage, setCroppedImage] = useState(null)
@@ -154,7 +154,6 @@ function UserProfile({user, logout, isOpen}) {
             {editMode ? <button onClick={()=>setEditMode(false)}>Cancel</button> : <button onClick={()=>setEditMode(true)}>Modify description</button>}
             
             {editMode ? <button onClick={()=>saveChanges()}>Save changes</button> : null}
-            <button onClick={logout}>Logout</button>
         </>}
         
     </div>

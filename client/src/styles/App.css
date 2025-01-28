@@ -7,9 +7,79 @@
   overflow-y: hidden;
 }
 :root{
-  --asideColor: #2255ab;
+  --asideColor: #242424;
+}
+/*NORMAL PART*/
+.normalContainer{
+  height: 100vh;
+  display: grid;
+  width: 100vw;
+  justify-items: center;
+  grid-template-rows: 1fr auto;
 }
 
+.footer{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 18px;
+  font-weight: 400;
+  background-color: black;
+}
+.footer a,.footer p{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+  transition: color 0.4s;
+}
+.footer a:hover{
+  transition: color 0.2s;
+  color: white;
+}
+.footer a:hover img{
+  transition: transform 0.2s;
+  transform: scale(1.4);
+}
+
+.footer img{
+  transition: transform 0.4s;
+  filter: invert(100%) sepia(2%) saturate(13%) hue-rotate(52deg) brightness(104%) contrast(100%);
+}
+.authBtns{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap:8px;
+}
+.appTitle{
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+  text-align: center;
+  color: white;
+}
+.appTitle span{
+  text-align: center;
+  color: rgb(0, 150, 250);
+}
+.appTitle img{
+  width: 65px;
+  height: 65px;
+  filter: invert(100%) sepia(2%) saturate(13%) hue-rotate(52deg) brightness(104%) contrast(100%);
+}
+
+.mainNormalContent{
+  width: 90vw;
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 body, html {margin: 0;padding: 0; height: 100%;}
 /*Main Part*/
 .content{
@@ -28,23 +98,24 @@ section{
 }
 /*Main Part - Account*/
 .accountInf{
+  padding: 15px 0px;
   width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
   gap: 25px;
-  background-color: #192e52;
+  background-color: #226ad3;
   border-bottom: solid #18181b 2px;
   margin-bottom: 25px;
   border-radius: 0;
   transition: background-color 0.3s;
-  transition: border 0.3s;
 }
 .accountInf:hover{
   border-bottom: solid #18181b 2px;
-  background-color: #18181b;
-  transition: background-color 0.2s;
+  background-color: #2256ab;
+  transition: background-color 0.3s;
+  cursor: pointer;
 }
 .accountInf:hover .account img{
   border: 2px solid #eff8ff;
@@ -57,6 +128,8 @@ section{
   gap: 10px
 }
 .account img{
+  transition: border 0.2s;
+  margin-left: 10px;
   border: 2px solid #18181b;
   border-radius: 50%;
   height: 75px;
@@ -74,6 +147,7 @@ section{
   gap: .85rem;
 }
 .friendsInf button{
+  background-color: #226ad3;
   line-height: 1.2;
   word-break: break-word;
   margin: 0px 10px;
@@ -82,6 +156,11 @@ section{
   flex-direction: row;
   align-items: center;
   gap: 8px;
+  transition: background-color 0.3s;
+}
+.friendsInf button:hover{
+  transition: background-color 0.2s;
+  background-color: #2256ab;
 }
 .newChangeButton::after{
   content: "";
@@ -164,11 +243,33 @@ section{
 .backgroundSideBar{
   display: none;
 }
+
+.LogOutBTN{
+  margin-right: 10px;
+  background-color: transparent;
+  padding: 0;
+  border: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.3s;
+}
+.LogOutBTN img{
+  height: 40px;
+  width: 40px;
+}
+.LogOutBTN:hover{
+  transition: transform 0.2s;
+  transform: scale(1.3);
+}
 @media (width<=870px) {
   .sideBar{
     position: fixed;
     transition: transform 0.3s ease-in-out;
     width: 80%;
+  }
+  aside{
+    border-right: 1px solid rgb(124, 124, 124)
   }
   .content{
     grid-template-columns: 0.5fr 3fr;

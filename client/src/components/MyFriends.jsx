@@ -1,21 +1,24 @@
 import React, { useEffect, useState } from 'react'
 import noPicture from '../assets/noPicturePfp.png'
 import FriendProfile from './FriendProfile.jsx';
+import X_ICON from '../assets/x_icon.svg'
 import '../styles/myFriends.css'
 
-function MyFriends({isOpen, myFriends}) {
+function MyFriends({isOpen, myFriends, socket, user}) {
 
     const [friendData, setFriendData] = useState(null);
     const [showFriendData, setShowFriendData] = useState(false);
+    const [friendName, setFriendName] = useState("");
 
     useEffect(()=>{
-          setShowFriendData(false);
+      setFriendName("");
+      setShowFriendData(false);
     }, [isOpen]);
 
     if(showFriendData){
         return(
           <>
-            <FriendProfile id={friendData.id} username={friendData.username} pfp={friendData.pfp} description={friendData.description} simple={true}></FriendProfile>
+            <FriendProfile id={friendData.id} username={friendData.username} pfp={friendData.pfp} description={friendData.description} socket={socket} myID={user.id} myUsername={user.username}></FriendProfile>
             <button onClick={()=>setShowFriendData(false)}>Return</button>
           </>
         )
@@ -24,11 +27,18 @@ function MyFriends({isOpen, myFriends}) {
   return (
     <>
         <h1>My friends</h1>
+        <div className='chatNameInputFriends'>
+          <input type="text" placeholder='Search' value={friendName} onChange={e=>setFriendName(e.target.value)}/>
+          <button className={`clearButtonFriends ${!friendName ? 'hidden' : ''}`} onClick={()=>setFriendName("")}><img src={X_ICON} alt="clean" /></button>
+        </div>
         <div className='friendsContainer'>
             {
             myFriends.length == 0 ? <h3>No friends yet. Go find some!</h3> : 
             
             myFriends.map(f=>{
+                if(!f.username.toLowerCase().startsWith(friendName.toLowerCase()) && friendName){
+                  return
+                }
                 return (
                 <button key={f.id} className='friendBlock' onClick={()=>{setShowFriendData(true), setFriendData({id: f.id, username: f.username, description: f.description, pfp: f.picture})}}>
                     <div className="PR_User">

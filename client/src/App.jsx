@@ -3,7 +3,7 @@ import { socket, connectSocket } from './socket'
 import Rodal from 'rodal';
 import 'rodal/lib/rodal.css';
 import './styles/App.css'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import axios from 'axios';
 import Cookies from 'js-cookie'
 import AddFriend from './components/AddFriend.jsx'
@@ -11,12 +11,16 @@ import PendingRequests from './components/PendingRequests.jsx'
 import MyFriends from './components/MyFriends.jsx'
 import ChatsList from './components/ChatsList.jsx'
 import noPicture from './assets/noPicturePfp.png'
+import logOut_Icon from './assets/log_out.svg'
 import addFriend from './assets/addFriend.svg'
 import friendsIcon from './assets/friendsIcon.svg'
 import requestIcon from './assets/requestIcon.svg'
 import { ToastContainer} from 'react-toastify'
 import MainChat from './components/MainChat.jsx'
 import UserProfile from './components/UserProfile.jsx'
+import githubSvg from './assets/github.svg'
+import appIcon from './assets/chat.svg';
+import { useSwipeable } from "react-swipeable";
 import 'ldrs/infinity'
 
 function App() {
@@ -39,6 +43,11 @@ function App() {
 
   const sideBarRef = useRef(null);
 
+  const handlers = useSwipeable({
+    onSwipedLeft: () => setSideBarOpen(false),
+    onSwipedRight: () => setSideBarOpen(true),
+  });
+
   const navigate = useNavigate();
 
   function toggleSideBar(){
@@ -54,8 +63,9 @@ function App() {
   }
 
   function updateCurrentChatData(newCurrentChatData, allChats){
-    setChats(allChats.map(chat=>
-      chat.id === newCurrentChatData.id ? newCurrentChatData : chat));
+      setChats(prev=> (allChats ?? prev).map(chat=>
+        chat.id === newCurrentChatData.id ? newCurrentChatData : chat));
+    
   }
 
   function changeCurrentChat(newCurrentChatData, friend){
@@ -102,20 +112,31 @@ function App() {
       }
     }
     fetchUserData(); 
+    const handleResize = () => {
+      if(window.innerWidth > 870){
+        setSideBarOpen(true);
+      }
+      
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   },[])
   return (
     <>
       <ToastContainer autoClose={5000} pauseOnHover={false} pauseOnFocusLoss={false}/>
       {
         loading ? 
-        <l-infinity
-        size="105"
+        <div style={{height:'100%', display: 'flex', justifyContent: 'center', alignItems:'center'}}>
+          <l-infinity
+        size="205"
         stroke="4"
         stroke-length="0.15"
         bg-opacity="0.1"
         speed="1.3"
         color="white" 
         ></l-infinity>
+        </div>  
       :
         user ? 
         <>
@@ -132,27 +153,26 @@ function App() {
           </Rodal>
 
           <Rodal visible={userProfileDialog} onClose={()=>setUserProfileDialog(false)} customStyles={{maxWidth:'430px',width:'80vw', height:'75vh'}}>
-            <UserProfile user={user} logout={()=>{Cookies.remove("jwt"), navigate(0)}} isOpen={userProfileDialog}/>
+            <UserProfile user={user} isOpen={userProfileDialog}/>
           </Rodal>
-          <main className='content' >
+          <main {...handlers} className='content' >
             <div ref={sideBarRef} className={`backgroundSideBar ${sideBarOpen ? '' : 'none'}`} ></div>
             <button className='sideBarButton' onClick={()=>toggleSideBar()}></button>
             <aside className={`sideBar ${sideBarOpen ? '' : 'closed'}`}>
-              <button className='accountInf' onClick={()=>setUserProfileDialog(true)}>
+              <div className='accountInf' onClick={()=>setUserProfileDialog(true)} role="button" tabIndex={0}>
                 <div className='account'>
                   <img src={user.picture ?? noPicture} alt="profile picture" />
                   <h2>{user.username}</h2>
                 </div>
-              </button>
+                <button className='LogOutBTN' onClick={(e)=>{e.stopPropagation(), Cookies.remove("jwt"), navigate(0)}}><img src={logOut_Icon} alt="Log out" /></button>
+              </div>
               <div className='friendsInf'>
                 <button onClick={()=>setOpenDialog_fr(true)}><img src={addFriend}/> Add Friend</button>
                 <button className={`${newRequests ? 'newChangeButton' : ''}`} onClick={()=>setOpenDialog_pr(true)}><img src={requestIcon}></img> Pending Requests</button>
                 <button onClick={()=>setOpenDialog_mf(true)}><img src={friendsIcon}></img> My Friends</button>
-                
               </div>
               <div>
-                <h2>Chats</h2>
-                <ChatsList chats={chats} user={user} changeCurrentChat={changeCurrentChat} currentChat={currentChatData ? currentChatData.chat : null} friends={myFriends} modifiedChats={modifiedChats} setModifiedChats={setModifiedChats}/>
+                <ChatsList chats={chats} user={user} changeCurrentChat={changeCurrentChat} currentChat={currentChatData ? currentChatData.chat : null} friends={myFriends} modifiedChats={modifiedChats}/>
               </div>
             </aside>
             <section>
@@ -160,11 +180,18 @@ function App() {
             </section>
           </main>
         </>: 
-        <>
-          <h1>Messaging app</h1>
-          <button onClick={()=>navigate("/login")}>Login</button>
-          <button onClick={()=>navigate("/register")}>Register</button>
-        </>
+        <div className='normalContainer'>
+          <main className='mainNormalContent'>
+            <h1 className='appTitle'>Snap<span>Talk</span><img src={appIcon}/></h1>
+            <div className='authBtns'>
+              <button onClick={()=>navigate("/login")}>Login</button>
+              <button onClick={()=>navigate("/register")}>Register</button>
+            </div>
+          </main>
+          <footer className='footer'>
+            <p>Made by <Link to='https://github.com/Hrid1402'>Hrid1402 <img src={githubSvg}/></Link></p>
+          </footer>
+        </div>
       }
       
     </>

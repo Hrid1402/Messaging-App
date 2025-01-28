@@ -3,14 +3,19 @@ import dotsIcon from '../assets/dots.svg'
 import noPicture from '../assets/noPicturePfp.png' 
 import sendIcon from '../assets/sendIcon.svg'
 import imageIcon from  '../assets/imageIcon.svg'
+import shareIcon from '../assets/share.svg'
+import messageIcon from '../assets/message.svg'
+import generativeIcon from '../assets/generative.svg'
 import gifIcon from '../assets/gifIcon.png'
 import {toast} from 'react-toastify';
 import FriendProfile from './FriendProfile.jsx';
 import MessageInf from './MessageInf.jsx'
 import GifSearcher from './GifSearcher.jsx'
+import GenerationAI from './GenerationAI.jsx'
 import '../styles/MainChat.css'
 import Rodal from 'rodal';
 import axios from 'axios';
+
 import 'rodal/lib/rodal.css';
 
 
@@ -23,11 +28,18 @@ function MainChat({chat, friend, user, socket, updateCurrentChatData, chats, mod
     const [curImage, setCurImage] = useState(null);
     const [showImageDialog, setShowImageDialog] = useState({state: false, img: null});
     const [showGifModal, setShowGifModal] = useState(false);
+    const [showGenerationModal, setShowGenerationModal] = useState(false);
     const [message, setMessage]  = useState("")
 
     const [messageLoading, setMessageLoading] = useState(false);
     const [tempMessage, setTempMessage] = useState(null);
     const currentChat = chat ? chats.find(c => c.id === chat.id) : null;
+
+    const [background, setBackground] = useState(currentChat ? currentChat.background: null);
+
+    useEffect(()=>{
+        setBackground(currentChat ? currentChat.background: null);
+    },[currentChat])
     useEffect(()=>{
         const handleMessage = (data)=>{
             console.log("socket received", data);
@@ -74,13 +86,25 @@ function MainChat({chat, friend, user, socket, updateCurrentChatData, chats, mod
                     </p>
                 </div>,
                 { icon: false}
-                );
+            );
         }
-        
-        
+
+        const handleChangeBackground = (data) => {
+            console.log("change background received", data);
+            updateCurrentChatData(data.chat);
+            if(data.fromID === user.id){
+                toast.success('Chat background updated successfully!');
+            }else{
+                toast(`${data.fromName} updated the background!`);
+            }
+            
+            
+        };
         socket.on('messageNotification', handleMessage);
+        socket.on('changeBackground', handleChangeBackground);
         return () => {
             socket.off("messageNotification", handleMessage);
+            socket.off('changeBackground', handleChangeBackground);
         };
     }, [socket, friend])
 
@@ -102,11 +126,26 @@ function MainChat({chat, friend, user, socket, updateCurrentChatData, chats, mod
     if(chat==null){
         return(
             <div className='snapTalk_intr'>
-                <h1>Welcome to Snap<span className='talk'>Talk</span>!</h1>
-                <p>The easiest way to stay connected with your friends.</p>
-                <p>Start your first chat now and never miss a moment!</p>
-                <p>Send messages, share photos, and more—everything in one place.</p>
-                <p>Let’s get chatting!</p>
+                <h1 className='title'>Welcome to Snap<span className='talk'>Talk</span>!</h1>
+                <h2 className='subtitle'>The easiest way to stay connected with your friends.</h2>
+                <div className='characteristics'>
+                    <div className='SnapContentBlock'>
+                        <img src={messageIcon}/>
+                        <p>Send instant messages with friends</p>
+                    </div>
+                    <div className='SnapContentBlock'>
+                        <img src={imageIcon}/>
+                        <p>Share your favorite photos and GIFs and moments</p>
+                    </div>
+                    <div className='SnapContentBlock'>
+                        <img src={shareIcon}/>
+                        <p>Everything you need in one place</p>
+                    </div>
+                    <div className='SnapContentBlock'>
+                        <img src={shareIcon}/>
+                        <p>Everything you need in one place</p>
+                    </div>
+                </div>
             </div>
         )
     }
@@ -118,7 +157,7 @@ function MainChat({chat, friend, user, socket, updateCurrentChatData, chats, mod
         setMessageInfData(value)
     }
 
-    async function sendMessage(newMessage, isImage, isGif){
+    async function sendMessage(newMessage, isImage, notBlob){
         console.log(newMessage);
         if(newMessage.trim("") == ""){
             return
@@ -126,7 +165,7 @@ function MainChat({chat, friend, user, socket, updateCurrentChatData, chats, mod
         if(isImage){
             console.log("Image");
             let pictureURL = "";
-            if(!isGif){
+            if(!notBlob){
                 const response = await fetch(newMessage);
                 const blob = await response.blob();
                 
@@ -181,7 +220,7 @@ function MainChat({chat, friend, user, socket, updateCurrentChatData, chats, mod
   return (
     <>
         <Rodal visible={friendDialogOpen} onClose={()=>setFriendDialogOpen(false)} customStyles={{maxWidth:'600px',width:'80vw', height:'60vh'}}>
-            <FriendProfile id={friend.id} username={friend.username} description={friend.description} pfp={friend.picture} socket={socket} myID={user.id} myUsername={user.username}/>
+            <FriendProfile chatID={currentChat.id} isOpen={friendDialogOpen} simple={true} chat={true} id={friend.id} username={friend.username} description={friend.description} pfp={friend.picture} socket={socket} myID={user.id} myUsername={user.username}/>
         </Rodal>
 
         <Rodal visible={messageInfDialogOpen} onClose={()=>setMessageInfDialogOpen(false)} customStyles={{maxWidth:'430px',width:'80vw', height:'60vh'}}>
@@ -189,7 +228,7 @@ function MainChat({chat, friend, user, socket, updateCurrentChatData, chats, mod
         </Rodal>
 
         <Rodal visible={showImageDialog.state} onClose={()=>setShowImageDialog({state:false, img: null})} customStyles={{ height: 'fit-content', width: 'fit-content', maxHeight: '80vh', maxWidth: '80vw', backgroundColor:'rgba(0, 0, 0, 0.53)', overflowY: 'hidden'}}>
-            <img src={showImageDialog.img} alt="photo" style={{height:'100%', width:'100%', objectFit:'contain'}}/>
+            <img src={showImageDialog.img} alt="photo" style={{width:'100%', objectFit:'contain'}}/>
         </Rodal>
 
         <Rodal visible={showGifModal} onClose={()=>setShowGifModal(false) } customStyles={{maxWidth:'600px',width:'80vw', height:'70vh'}} >
@@ -197,7 +236,11 @@ function MainChat({chat, friend, user, socket, updateCurrentChatData, chats, mod
         </Rodal>
 
 
-        <div className='MainChatContainer' >
+        <Rodal visible={showGenerationModal} onClose={()=>setShowGenerationModal(false) } customStyles={{maxWidth:'800px',width:'80vw', height:'80vh'}} >
+            <GenerationAI sendMessage={sendMessage} closeModal={()=>setShowGenerationModal(false)}/>
+        </Rodal>
+
+        <div className='MainChatContainer' style={{...(background && background.startsWith('#') ? {backgroundColor:background} : background ? {backgroundImage:background, backgroundSize: 'cover', backgroundPosition: 'center', backgroundColor:'rgba(0,0,0,0.4)', backgroundBlendMode: 'darken'} : {backgroundColor:'#192e52'} )}}> 
             <header className='headerFriendData'>
                 <button className='friendUserDataBTN' onClick={()=>setFriendDialogOpen(true)}>
                     <img src={friend.picture ?? noPicture} />
@@ -227,9 +270,10 @@ function MainChat({chat, friend, user, socket, updateCurrentChatData, chats, mod
                 : 
                     <>
                         <input type="file" style={{display:'none'}} ref={inputImageRef} onChange={e=>handleImage(e)}/>
-                        <textarea value={message} onChange={e=>setMessage(e.target.value)} onKeyDown={handleKeyPress}></textarea>
+                        <textarea value={message} onChange={(e)=>setMessage(e.target.value)} onKeyDown={handleKeyPress}></textarea>
                         <button onClick={()=>inputImageRef.current.click()} className={`image_btn ${message ? 'hidden' : ''}`}><img src={imageIcon} alt='img'></img></button>
                         <button onClick={()=>setShowGifModal(true)} className={`gif_btn ${message ? 'hidden' : ''}`}><img src={gifIcon} alt='gif'></img></button>
+                        <button onClick={()=>setShowGenerationModal(true)} className={`generative_btn ${message ? 'hidden' : ''}`}><img src={generativeIcon} alt='generative AI'></img></button>
                         <button onClick={()=>sendMessage(message)} className={`send_btn ${!message ? 'hidden' : ''}`} disabled={messageLoading}>{messageLoading ? 'Sending...' : <img src={sendIcon} alt='Send'></img>}</button>
                     </>
                 }

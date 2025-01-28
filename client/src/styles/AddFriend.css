@@ -22,7 +22,7 @@
 }
 .userToAdd button{
     transition: background-color 0.3s, color 0.3s;
-    background-color: #c1e3fc;
+    background-color: #d7d9e0;
     border: 1px solid var(--borderUserColor);
     color:  var(--borderUserColor);
     padding: 6px 10px;
@@ -30,11 +30,11 @@
 .userToAdd button:hover:not(.userToAdd button:disabled){
     transition: background-color 0.2s, color 0.2s;
     background-color: var(--borderUserColor);
-    color:  #c1e3fc;
+    color:  #d7d9e0;
 }
 .userToAdd button:disabled{
     background-color: var(--borderUserColor);
-    color:  #c1e3fc;
+    color:  #d7d9e0;
 }
 .userToAdd button:disabled:hover{
     border: 1px solid var(--borderUserColor);

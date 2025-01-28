@@ -1,9 +1,9 @@
 :root{
     --chatColor: #192e52;
     --inputColor: rgb(218, 223, 224);
-    --myMessageColor: #3797f0;
-    --friendMessageColor: #226ad3;
-    --deletedMessageTextColor: #96d3fa;
+    --myMessageColor: #3d3d3d;
+    --friendMessageColor: #1a1a1a;
+    --deletedMessageTextColor: #888888;
 }
 .headerFriendData{
     width: 100%;
@@ -42,6 +42,7 @@
     background-color: var(--chatColor);
 }
 .InputArea{
+    box-shadow: 0px 0px 20px -2px rgba(0,0,10,0.5);
     background-color: var(--inputColor);
     border-radius: 10px;
     margin-right: 10px;
@@ -129,7 +130,7 @@
 
 .message .messageContent{
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-    font-weight: 500;
+    font-weight: 400;
     font-size: clamp(1rem, 1vw, 2rem);
     margin-bottom: 0;
     padding: 0px 20px;
@@ -198,7 +199,7 @@
 .loadingMessage h2{
     padding-bottom: 16px !important;
 }
-.image_btn, .gif_btn, .send_btn{
+.image_btn, .gif_btn, .send_btn, .generative_btn{
     background-color: transparent;
     margin: 0;
     padding: 0;
@@ -206,14 +207,17 @@
     outline: none;
     transition: transform 0.3s;
 }
-.image_btn:hover, .gif_btn:hover, .send_btn:hover{
+.image_btn:hover, .gif_btn:hover, .send_btn:hover, .generative_btn:hover{
     transition: transform 0.2s;
     transform: scale(1.2);
 }
-.image_btn img, .gif_btn img, .send_btn img{
+.image_btn img, .gif_btn img, .send_btn img, .generative_btn img{
     height: auto;
     padding: 0px 0.2vw;
-    width: max(2.2rem, 2vw);
+    width: min(2.2rem, 10vw);
+}
+.generative_btn{
+    margin-right: 8px;
 }
 @media (width<=870px) {
     .message{
@@ -222,12 +226,63 @@
 }
 
 .allMessagesContainer::-webkit-scrollbar-thumb {
-    background: #3797f0;
+    background: var(--myMessageColor);
 }
-
 .snapTalk_intr{
-
+    height: 100vh;
+    overflow-y: scroll;
 }
-.talk{
+.snapTalk_intr .title{
+    margin-bottom: 0;
+    font-size: min(3.2em, 12vw);
+}
+.snapTalk_intr .talk{
     color:#3797f0;
+}
+.snapTalk_intr .subtitle{
+    margin-top: 0;
+    margin-bottom: 50px;
+    font-weight: 100;
+    font-size: min(30px, 7vw);
+}
+.characteristics{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 50px;
+}
+.SnapContentBlock{
+    width: 80%;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(242, 243, 247);
+    padding: 15px;
+    box-shadow: 
+    0 0 5px rgba(255, 255, 255, 0.6), 
+    0 0 10px rgba(255, 255, 255, 0.4), 
+    0 0 20px rgba(255, 255, 255, 0.2);
+    transition: box-shadow 0.3s;
+}
+.SnapContentBlock:hover{
+    transition: box-shadow 0.2s;
+    box-shadow: 
+    0 0 10px rgba(255, 255, 255, 0.7), 
+    0 0 20px rgba(255, 255, 255, 0.5), 
+    0 0 30px rgba(255, 255, 255, 0.3);
+}
+.SnapContentBlock:last-child{
+    margin-bottom: 30px;
+}
+.SnapContentBlock p{
+    color: black;
+    font-size: min(22px, 6vw);
+    margin: 0
+}
+.SnapContentBlock img{
+    height: 35px;
+    width: 35px;
 }

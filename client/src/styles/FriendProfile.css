@@ -5,12 +5,81 @@
     align-items: center;
     padding-top: 45px;
 }
+.friendProfileContainer h1{
+    word-break: break-all;
+    margin: 10px 0px;
+}
+.changeBackgroundMode{
+    color: black;
+}
+.changeBackgroundMode h1{
+    font-size: 28px;
+    margin: 0;
+    padding-bottom: 15px;
+}
 .friendProfileContainer img{
     height: 250px;
     width: 250px;
     border-radius: 50%;
-    object-fit: content;
+    object-fit: cover;
 }
 .rodal-dialog{
     overflow-y: auto;
+}
+.solidColors{
+    display: grid;
+    gap: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+.solidColor{
+    padding-top: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 180px;
+}
+.solidColorContent{
+    height: 100%;
+    width: 100%;
+    background-color: white;
+}
+.solidColor h3{
+    text-align: center;
+    margin-top: 5px;
+    margin-bottom: 0;
+}
+.Themes{
+    display: grid;
+    gap: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+.theme{
+    padding-top: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.theme img{
+    height: 180px;
+    width: 100%;
+    object-fit: cover;
+}
+.animations{
+    display: grid;
+    gap: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+.animated{
+    padding-top: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.animated img{
+    height: 180px;
+    width: 100%;
+    object-fit: cover;
 }

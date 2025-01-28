@@ -8,6 +8,7 @@ import './styles/index.css'
 import App from './App.jsx'
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
+import Error from './pages/Error.jsx'
 
 const router = createBrowserRouter([
   {
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
     path: "/register",
     element: <Register/>,
   },
+  {
+    path: "*",
+    element: <Error/>
+  }
 
 ]);
 
