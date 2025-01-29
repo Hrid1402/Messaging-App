@@ -11,13 +11,17 @@ datasource db {
 model User{
   id String @id @default(cuid())
   username String @db.VarChar(15)
+  description String?
   password String
   picture String?
+  newRequests Boolean @default(false)
 
   friends User[] @relation("UserFriends")
   friendsOf User[] @relation("UserFriends")
   sendedRequests FriendRequest[] @relation("sended")
   receivedRequests FriendRequest[]  @relation("received")
+
+  modifiedChats String[]
 
   chats Chat[] @relation("chats")
   messages Message[]
@@ -27,6 +31,7 @@ model Chat{
   id String @id @default(cuid())
   participants User[] @relation("chats")
   messages Message[]
+  background String?
   updatedAt DateTime @updatedAt
 }
 
@@ -39,6 +44,7 @@ model Message{
   chat Chat @relation(fields:[chatID], references: [id])
   edited Boolean @default(false)
   deleted Boolean @default(false)
+  image Boolean @default(false)
   createdAt DateTime @default(now())
 }
 
@@ -51,3 +57,4 @@ model FriendRequest{
   toName String @db.VarChar(35)
   to User  @relation("received", fields: [toID], references: [id])
 }
+  

@@ -11,8 +11,6 @@ CREATE TABLE "User" (
 -- CreateTable
 CREATE TABLE "Chat" (
     "id" TEXT NOT NULL,
-    "name" VARCHAR(35) NOT NULL,
-
     CONSTRAINT "Chat_pkey" PRIMARY KEY ("id")
 );
 

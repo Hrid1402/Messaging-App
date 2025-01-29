@@ -36,13 +36,18 @@ export const socketHandler = (socket, io)=>{
                     id: data.toID,
                 }, 
                 data:{
+                    newRequests: true,
                     receivedRequests: {
                         connect:{
                             id: frReq.id
                         }
                     }
                 }, select:{
-                    receivedRequests: true
+                    receivedRequests: {
+                        include:{
+                            from: true
+                        }
+                    }
                 }
             });
             console.log("the important one")
@@ -142,7 +147,13 @@ export const socketHandler = (socket, io)=>{
             if (oldChat){
                 console.log("oldChat exist!");
                 console.log(oldChat);
-                Chat = oldChat;
+                Chat = await prisma.chat.update({
+                    where:{
+                        id: oldChat.id
+                    }, data:{
+                        updatedAt: new Date()
+                    }
+                })
                 //Logic to return oldChat after being friends again.
             }else{
                 Chat = await prisma.chat.create({
@@ -152,7 +163,8 @@ export const socketHandler = (socket, io)=>{
                                 {id: data.fromID},
                                 {id: data.toID}
                             ]
-                        }
+                        }, 
+                        updatedAt: new Date()
                     }
                 })
             }
@@ -181,7 +193,10 @@ export const socketHandler = (socket, io)=>{
                                   createdAt: "asc"
                                 }
                               }
-                        }
+                        },
+                    orderBy:{
+                        updatedAt: "desc"
+                    }
                     }
                 }
             });
@@ -209,7 +224,10 @@ export const socketHandler = (socket, io)=>{
                                   createdAt: "asc"
                                 }
                               }
-                          }
+                          },
+                        orderBy:{
+                            updatedAt: "desc"
+                        }
                     }
                 }
             });
@@ -233,7 +251,8 @@ export const socketHandler = (socket, io)=>{
                 data:{
                     chatID: data.chatID,
                     content: data.content,
-                    authorID: data.authorID
+                    authorID: data.authorID,
+                    image: data.isImage
                 }
             });
 
@@ -281,29 +300,69 @@ export const socketHandler = (socket, io)=>{
                     }
                 }
             })
-            const allChats2 = await prisma.user.findUnique({
-                where:{
-                    id: data.toID
-                },select:{
-                    friends:true,
-                    chats: {
-                        include:{
-                            participants: true,
-                            messages: {
-                                orderBy:{
-                                  createdAt: "asc"
-                                }
-                              }
-                          },
-                          orderBy:{
-                              updatedAt: "desc"
-                          }
-                    }
-                }
-            })
 
-            io.to(data.authorID).emit('receivedMessage', {chat: chat, chats: allChats1.chats});
-            io.to(data.toID).emit('messageNotification',{content: data.content, username:data.username});
+            const modifiedChats = await prisma.user.findUnique({
+                where: { id: data.toID },
+                select: { modifiedChats: true }
+            });
+            console.log('CHATS MODIFIED', modifiedChats.modifiedChats);
+
+            let allChats2 = null;
+            if (!modifiedChats?.modifiedChats.includes(data.chatID)) {
+                allChats2 = await prisma.user.update({
+                    where:{
+                        id: data.toID
+                    },
+                    data:{
+                        modifiedChats:{
+                            push: data.chatID
+                        }
+                    },select:{
+                        modifiedChats: true,
+                        friends:true,
+                        chats: {
+                            include:{
+                                participants: true,
+                                messages: {
+                                    orderBy:{
+                                      createdAt: "asc"
+                                    }
+                                  }
+                              },
+                              orderBy:{
+                                  updatedAt: "desc"
+                              }
+                        }
+                    }
+                })
+            }else{
+                allChats2 = await prisma.user.findUnique({
+                    where:{
+                        id: data.toID
+                    },select:{
+                        friends:true,
+                        chats: {
+                            include:{
+                                participants: true,
+                                messages: {
+                                    orderBy:{
+                                      createdAt: "asc"
+                                    }
+                                  }
+                              },
+                              orderBy:{
+                                  updatedAt: "desc"
+                              }
+                        }
+                    }
+                })
+            }
+            
+
+            //addingToModifiedList
+
+            io.to(data.authorID).emit('receivedMessage', {chat: chat, chats: allChats1.chats, authorID: data.authorID});
+            io.to(data.toID).emit('messageNotification',{authorID:data.authorID, content: data.content, username:data.username, isImage: data.isImage, modifiedChats:allChats2.modifiedChats});
             io.to(data.toID).emit('receivedMessage',{chat: chat, chats: allChats2.chats});
 
         }catch(error){
@@ -533,7 +592,44 @@ export const socketHandler = (socket, io)=>{
             console.error('Error deleting friend:', error);
         }        
     });
+    socket.on('updateModifiedChats', async(data)=>{
+        console.log('updating modified data');
+        try {
+            await prisma.user.update({
+                where:{
+                    id: data.userID
+                },data:{
+                    modifiedChats: data.modifiedChats
+                }
+            });
+        } catch (error) {
+            console.log("Error updating modified data.");
+        }
+    });
 
+    socket.on('changeBackground', async(data)=>{
+        console.log('Changing chat background', data);
+        try {
+            const chat = await prisma.chat.update({
+                where:{
+                    id: data.chatID
+                }, data:{
+                    background: data.background
+                },include:{
+                    participants: true,
+                    messages: {
+                        orderBy:{
+                          createdAt: "asc"
+                        }
+                      }
+                }
+            })
+            io.to(data.fromID).emit('changeBackground',  {chat: chat, fromName: data.fromName, fromID: data.fromID});
+            io.to(data.toID).emit('changeBackground',  {chat: chat, fromName: data.fromName, fromID: data.fromID});
+        } catch (error) {
+            console.log("Error changing chat background", error);
+        }
+    });
 
     socket.on('disconnect', () => {
         console.log(`User disconnected: ${socket.user.username}`);

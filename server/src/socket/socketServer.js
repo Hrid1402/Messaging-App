@@ -13,6 +13,7 @@ export const socketServer = (server)=>{
         credentials: true
     }));
 
+
     io.use(async(socket, next) => {
         const token = socket.handshake.auth.token;
         if (!token) {

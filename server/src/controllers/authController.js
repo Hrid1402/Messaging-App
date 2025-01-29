@@ -83,7 +83,10 @@ export async function getUser(req, res){
         res.status(200).json({
             id: user.id,
             username: user.username,
+            description: user.description,
             picture: user.picture,
+            newRequests: user.newRequests,
+            modifiedChats: user.modifiedChats,
             friends: user.friends,
             chats: user.chats,
             sended: user.sendedRequests,
@@ -96,21 +99,26 @@ export async function getUser(req, res){
 
 export async function putUser(req, res){
     try{
-        const {username, picture, friends, chats} = req.body;
+        const {username, description, picture, friends, chats, newRequests, modifiedChats} = req.body;
         const user = await prisma.user.update({
             where:{
                 id: req.user.id
             },
             data:{
                 username: username,
+                description: description,
+                newRequests: newRequests,
                 picture: picture,
                 friends: friends,
+                modifiedChats: modifiedChats,
                 chats: chats
             }
         });
         res.status(200).json({
             id: user.id,
             username: user.username,
+            description: user.description,
+            newRequests: newRequests,
             picture: user.picture,
             friends: user.friends,
             chats: user.chats
@@ -133,7 +141,8 @@ export async function searchUser(req, res){
             }, select:{
                 id: true,
                 username: true,
-                picture: true
+                picture: true,
+                description: true
             }
         });
         res.status(200).json(users);

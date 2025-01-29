@@ -18,7 +18,11 @@ const opts = {
               }, include:{
                 friends:true,
                 sendedRequests:true,
-                receivedRequests: true,
+                receivedRequests: {
+                  include: {
+                    from: true,
+                  },
+                },
                 chats: {
                   include:{
                     participants: true,
