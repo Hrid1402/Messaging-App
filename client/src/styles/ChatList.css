@@ -36,6 +36,9 @@
     border-color: var(--borderColor);
     background-color: var(--friendChatColorHover);
 }
+.chatListBTN_ACTIVE:hover{
+    border-color: var(--borderColor);
+}
 .btnUsername{
    font-size: 1.875em;
    font-weight: 500;

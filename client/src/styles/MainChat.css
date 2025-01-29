@@ -36,6 +36,7 @@
     object-fit: cover;
 }
 .MainChatContainer{
+    position: relative;
     display: flex;
     flex-direction: column;
     height: 100vh;
@@ -54,18 +55,18 @@
     grid-template-columns: 1fr auto auto auto;
 }
 .imageBTNS{
-    place-self: center;
+    padding: 10px 0px;
+    align-self: center;
     display: flex;
     flex-direction: column;
     gap: 10px;
-    padding-right: 15px;
-    
 }
 .InputArea .prevIMG{
-    padding: 15px;
+    align-self: center;
+    margin: 15px;
     max-height: 40vh;
+    width: 86%;
     height: auto;
-    width: 100%;
     object-fit: contain;
 }
 
@@ -99,7 +100,7 @@
     flex-direction: column;
     overflow-y: auto;
     flex: 1;
-    gap: 5px;
+    gap: 7px;
     padding: 15px;
     scroll-behavior: smooth;
 }
@@ -126,7 +127,9 @@
 }
 .message img{
     box-shadow: 0px 0px 22px -6px rgba(0,0,0,0.75);
+    max-height: 40vh;
 }
+
 
 .message .messageContent{
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -223,6 +226,9 @@
     .message{
         max-width: 70vw;
     }
+    .message img{
+        max-width: 54vw;
+    }
 }
 
 .allMessagesContainer::-webkit-scrollbar-thumb {
@@ -285,4 +291,35 @@
 .SnapContentBlock img{
     height: 35px;
     width: 35px;
+}
+.hideScrollBTN{
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+}
+.ScrollDownBTN{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.2s;
+    position: absolute;
+    top: 85%;
+    left: 50%;
+    margin: 0;
+    padding: 0;
+    height: 45px;
+    width: 45px;
+    background-color: transparent;
+    border: none;
+    transform: translate(-50%, -50%); /* Adjusts for the button's size */
+}
+.ScrollDownBTN:hover img{
+    border: none;
+    transition: transform 0.2s;
+    transform: scale(1.5);
+}
+.ScrollDownBTN img{
+    transition: transform 0.3s;
+    height: 100%;
+    width: 100%;
 }

@@ -139,11 +139,13 @@ function AddFriend({isOpen, user, socket, updateFriends, friends, updateChats, e
           {!loadingAddFriend && <button onClick={()=>searchUser(searchedUser)} disabled={loading}>{loading ? 'Searching...' : 'Search'}</button>}
         </div>
         { loadingAddFriend ? 
-        <l-tail-chase
-        size="40"
+        <div style={{marginTop:'60px'}}>
+          <l-tail-chase
+        size="80"
         speed="1.75"
         color="black" 
       ></l-tail-chase> 
+        </div>
       : 
         
         showSearch? <h2>Results for '{realSearchedUser}'</h2> : null}

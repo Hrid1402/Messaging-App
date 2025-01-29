@@ -6,6 +6,9 @@
     justify-content: center;
     flex-direction: column;
 }
+.msgInfImg{
+    width: 100%;
+}
 .MI_Title{
     font-size: 28px;
     margin: 0;

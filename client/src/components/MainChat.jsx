@@ -6,7 +6,10 @@ import imageIcon from  '../assets/imageIcon.svg'
 import shareIcon from '../assets/share.svg'
 import messageIcon from '../assets/message.svg'
 import generativeIcon from '../assets/generative.svg'
+import AI_Icon from '../assets/AI_Icon.png'
+import bottomArrow from '../assets/arrow.svg'
 import gifIcon from '../assets/gifIcon.png'
+import spinner from '../assets/spinner.svg'
 import {toast} from 'react-toastify';
 import FriendProfile from './FriendProfile.jsx';
 import MessageInf from './MessageInf.jsx'
@@ -32,10 +35,27 @@ function MainChat({chat, friend, user, socket, updateCurrentChatData, chats, mod
     const [message, setMessage]  = useState("")
 
     const [messageLoading, setMessageLoading] = useState(false);
+    const [imageLoading, setImageLoading] = useState(false);
     const [tempMessage, setTempMessage] = useState(null);
+    const [scrollDownBTN, setScrollDownBTN] = useState(false);
+
     const currentChat = chat ? chats.find(c => c.id === chat.id) : null;
 
     const [background, setBackground] = useState(currentChat ? currentChat.background: null);
+
+    useEffect(()=>{
+        if (!containerRef.current) return;
+        const handleScroll = () => {
+            const isBottom = containerRef.current.scrollHeight - containerRef.current.scrollTop - containerRef.current.clientHeight < 100;
+            setScrollDownBTN(!isBottom);
+        };
+    
+        containerRef.current.addEventListener('scroll', handleScroll);
+        handleScroll();
+        return () => {
+            containerRef.current.removeEventListener('scroll', handleScroll);
+        }
+    },[friend])
 
     useEffect(()=>{
         setBackground(currentChat ? currentChat.background: null);
@@ -117,11 +137,11 @@ function MainChat({chat, friend, user, socket, updateCurrentChatData, chats, mod
     }, [friend])
 
     useEffect(()=>{
-        if(chat!=null){
+        if(containerRef.current){
             containerRef.current.style.scrollBehavior = 'auto';
             containerRef.current.scrollTop = containerRef.current.scrollHeight;
         }
-    },[friend, chat]);
+    },[friend]);
 
     if(chat==null){
         return(
@@ -138,8 +158,8 @@ function MainChat({chat, friend, user, socket, updateCurrentChatData, chats, mod
                         <p>Share your favorite photos and GIFs and moments</p>
                     </div>
                     <div className='SnapContentBlock'>
-                        <img src={shareIcon}/>
-                        <p>Everything you need in one place</p>
+                        <img src={AI_Icon}/>
+                        <p>Create stunning images on the go with our AI image generator!</p>
                     </div>
                     <div className='SnapContentBlock'>
                         <img src={shareIcon}/>
@@ -166,6 +186,7 @@ function MainChat({chat, friend, user, socket, updateCurrentChatData, chats, mod
             console.log("Image");
             let pictureURL = "";
             if(!notBlob){
+                setImageLoading(true);
                 const response = await fetch(newMessage);
                 const blob = await response.blob();
                 
@@ -173,6 +194,7 @@ function MainChat({chat, friend, user, socket, updateCurrentChatData, chats, mod
                 formData.append("image", blob);
                 const picture = await axios.post(`https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_API}`,formData);
                 pictureURL = picture.data.data.url;
+                setImageLoading(false);
             }else{
                 pictureURL = newMessage;
             }
@@ -217,18 +239,31 @@ function MainChat({chat, friend, user, socket, updateCurrentChatData, chats, mod
     }
     }
 
+    function scrollBottom(){
+        if(containerRef.current){
+            containerRef.current.style.scrollBehavior = 'smooth';
+            containerRef.current.scrollTop = containerRef.current.scrollHeight;
+        }
+    }
+
   return (
     <>
         <Rodal visible={friendDialogOpen} onClose={()=>setFriendDialogOpen(false)} customStyles={{maxWidth:'600px',width:'80vw', height:'60vh'}}>
-            <FriendProfile chatID={currentChat.id} isOpen={friendDialogOpen} simple={true} chat={true} id={friend.id} username={friend.username} description={friend.description} pfp={friend.picture} socket={socket} myID={user.id} myUsername={user.username}/>
+            <FriendProfile chatID={currentChat.id} isOpen={friendDialogOpen} simple={true} chat={true} id={friend.id} username={friend.username} description={friend.description} pfp={friend.picture} socket={socket} myID={user.id} myUsername={user.username} closeModal={()=>setFriendDialogOpen(false)}/>
         </Rodal>
 
         <Rodal visible={messageInfDialogOpen} onClose={()=>setMessageInfDialogOpen(false)} customStyles={{maxWidth:'430px',width:'80vw', height:'60vh'}}>
             {messageInfData? <MessageInf id={messageInfData.id} content={messageInfData.content} date={messageInfData.date} fromMe={messageInfData.fromMe} image={messageInfData.image} socket={socket} user={user} chatID={currentChat.id} toID={friend.id} showMessageInf={showMessageInf}/> : null}
         </Rodal>
 
-        <Rodal visible={showImageDialog.state} onClose={()=>setShowImageDialog({state:false, img: null})} customStyles={{ height: 'fit-content', width: 'fit-content', maxHeight: '80vh', maxWidth: '80vw', backgroundColor:'rgba(0, 0, 0, 0.53)', overflowY: 'hidden'}}>
-            <img src={showImageDialog.img} alt="photo" style={{width:'100%', objectFit:'contain'}}/>
+        <Rodal visible={showImageDialog.state} onClose={()=>setShowImageDialog({state:false, img: null})} customStyles={{width:'fit-content', height:'fit-content', maxHeight: '80vh', maxWidth: '80vw', backgroundColor:'rgba(0, 0, 0, 0.53)', overflowY: 'hidden'}}>
+            <img src={showImageDialog.img} alt="photo" style={{
+           maxHeight: '80vh',
+           maxWidth: '80vw',
+           height: 'auto',
+           width: 'auto',
+           objectFit: 'contain'
+        }}/>
         </Rodal>
 
         <Rodal visible={showGifModal} onClose={()=>setShowGifModal(false) } customStyles={{maxWidth:'600px',width:'80vw', height:'70vh'}} >
@@ -247,6 +282,7 @@ function MainChat({chat, friend, user, socket, updateCurrentChatData, chats, mod
                     <h1>{friend.username}</h1>
                 </button>
             </header>
+            
             <main className='allMessagesContainer' ref={containerRef}>
                 {
                     currentChat.messages.map(m=>{
@@ -258,14 +294,23 @@ function MainChat({chat, friend, user, socket, updateCurrentChatData, chats, mod
                 }
 
             </main>
+            <button onClick={()=>scrollBottom()} className={`ScrollDownBTN ${!scrollDownBTN ? 'hideScrollBTN' : ''}`}><img src={bottomArrow} alt='Scroll Bottom'></img></button>
             <footer className='InputArea'>
                 {curImage ? 
                     <>
-                        <img src={curImage} className='prevIMG'/> 
-                        <div className='imageBTNS'>
-                            <button onClick={()=>sendMessage(curImage, true)}>Send</button>
+                        <img src={curImage} className='prevIMG'/>
+                        {
+                            imageLoading ?
+                            <div style={{alignSelf:'center'}}>
+                                <button disabled={true}  >Loading...</button>
+                            </div> :
+                            <div className='imageBTNS'>
+                                <button onClick={()=>sendMessage(curImage, true)}>Send</button>
                             <button onClick={()=>setCurImage(null)}>Cancel</button>
                         </div>
+
+                        }
+                        
                     </>
                 : 
                     <>
@@ -274,7 +319,7 @@ function MainChat({chat, friend, user, socket, updateCurrentChatData, chats, mod
                         <button onClick={()=>inputImageRef.current.click()} className={`image_btn ${message ? 'hidden' : ''}`}><img src={imageIcon} alt='img'></img></button>
                         <button onClick={()=>setShowGifModal(true)} className={`gif_btn ${message ? 'hidden' : ''}`}><img src={gifIcon} alt='gif'></img></button>
                         <button onClick={()=>setShowGenerationModal(true)} className={`generative_btn ${message ? 'hidden' : ''}`}><img src={generativeIcon} alt='generative AI'></img></button>
-                        <button onClick={()=>sendMessage(message)} className={`send_btn ${!message ? 'hidden' : ''}`} disabled={messageLoading}>{messageLoading ? 'Sending...' : <img src={sendIcon} alt='Send'></img>}</button>
+                        <button onClick={()=>sendMessage(message)} className={`send_btn ${!message ? 'hidden' : ''}`} disabled={messageLoading}><img src={messageLoading ? spinner : sendIcon} alt='Send'></img></button>
                     </>
                 }
                 

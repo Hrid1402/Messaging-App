@@ -9,11 +9,19 @@ function ChatsList({chats, user, changeCurrentChat, currentChat, friends, modifi
 
   return (
     <div className='allChats'>
-        <h2 className='chatsTitle'>Chats</h2>
-        <div className='chatNameInput'>
-            <input type="text" placeholder='Search' value={chatName} onChange={e=>setChatName(e.target.value)}/>
-            <button className={`clearButton ${!chatName ? 'hidden' : ''}`} onClick={()=>setChatName("")}><img src={X_ICON} alt="clean" /></button>
-        </div>
+        {
+        friends.length == 0 ?
+            null
+        :
+        <>
+            <h2 className='chatsTitle'>Chats</h2>
+            <div className='chatNameInput'>
+                <input type="text" placeholder='Search' value={chatName} onChange={e=>setChatName(e.target.value)}/>
+                <button className={`clearButton ${!chatName ? 'hidden' : ''}`} onClick={()=>setChatName("")}><img src={X_ICON} alt="clean" /></button>
+            </div>
+        </>
+        }
+        
         {
             chats.map(c=>{
                 const friend = c.participants.find(i=>i.id != user.id);

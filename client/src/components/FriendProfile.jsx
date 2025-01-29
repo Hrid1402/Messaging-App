@@ -7,7 +7,7 @@ import {solidColors, backgroundThemes, animatedBackgrounds} from './Themes.js'
 import '../styles/FriendProfile.css'
 
 
-function FriendProfile({isOpen, chatID, chat=false, simple=false, id, username, description ,pfp, socket, myID, myUsername}) {
+function FriendProfile({isOpen, chatID, chat=false, simple=false, id, username, description ,pfp, socket, myID, myUsername, closeModal}) {
   const [changeBackgroundMode, setChangeBackgroundMode] = useState(null);
   const [loading, setLoading] = useState(null);
   const inputFile = useRef(null)
@@ -22,6 +22,7 @@ function FriendProfile({isOpen, chatID, chat=false, simple=false, id, username, 
   }
   function changeBackground(background, isImage){
     socket.emit('changeBackground', { fromID : myID, toID: id, fromName: myUsername, chatID: chatID, background: isImage ? `url(${background})` : background});
+    closeModal();
   }
 
   async function handleFile(event){

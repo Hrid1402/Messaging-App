@@ -42,7 +42,7 @@ function MessageInf({id, content, date, fromMe, image, socket, chatID, user, toI
     <div className='messageInformation'>
         <h1 className='MI_Title'>Message Information</h1>
         <h2 className='dateTime'>Content:</h2>
-        {!image ? <h2 className='MI_Content'>{content}</h2> : <img src={content} alt='photo'/>}
+        {!image ? <h2 className='MI_Content'>{content}</h2> : <img className='msgInfImg' src={content} alt='photo'/>}
         <h2 className='dateTime'>Date:</h2>
         <h2 className='dateTimeText'>{fullDate}</h2>
         <h2 className='dateTime'>Time:</h2>

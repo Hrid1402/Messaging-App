@@ -44,8 +44,14 @@ function App() {
   const sideBarRef = useRef(null);
 
   const handlers = useSwipeable({
-    onSwipedLeft: () => setSideBarOpen(false),
-    onSwipedRight: () => setSideBarOpen(true),
+    onSwipedLeft: () => {
+      if (window.innerWidth < 870) {
+        setSideBarOpen(false);
+      }
+    },
+    onSwipedRight: () => {
+        setSideBarOpen(true);
+    },
   });
 
   const navigate = useNavigate();
