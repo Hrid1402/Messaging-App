@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import noPicture from '../assets/noPicturePfp.png'
+import returnIcon from '../assets/return.png'
 import FriendProfile from './FriendProfile.jsx';
 import X_ICON from '../assets/x_icon.svg'
 import '../styles/myFriends.css'
@@ -18,8 +19,9 @@ function MyFriends({isOpen, myFriends, socket, user}) {
     if(showFriendData){
         return(
           <>
+            <button className='returnFriendBTN' onClick={()=>setShowFriendData(false)}><img src={returnIcon} alt='Return'></img></button>
             <FriendProfile id={friendData.id} username={friendData.username} pfp={friendData.pfp} description={friendData.description} socket={socket} myID={user.id} myUsername={user.username}></FriendProfile>
-            <button onClick={()=>setShowFriendData(false)}>Return</button>
+            
           </>
         )
       }

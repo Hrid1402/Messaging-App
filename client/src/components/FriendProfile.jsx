@@ -132,7 +132,7 @@ function FriendProfile({isOpen, chatID, chat=false, simple=false, id, username, 
         <h1>{username}</h1>
         {description && <h2>{description}</h2>}
         {chat && <button onClick={()=>setChangeBackgroundMode(true)}>Edit chat background</button>}
-        {!simple && <button onClick={()=>removeFriend()}>Remove friend</button>}
+        {!simple && <button className='removeFriend' onClick={()=>removeFriend()}>Remove friend</button>}
     </div>
   )
 }

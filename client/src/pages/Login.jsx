@@ -10,6 +10,7 @@ function Login() {
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
 
     async function handleLogin(){
@@ -53,16 +54,20 @@ function Login() {
                 New here? <Link to='/register'>Create an account</Link>
                 </h2>
                 <div className='LoginBlock'>
+                <h3 className='errorMessage'>{message}</h3>
                     <div className='LoginInputBlock'>
                         <h2>Username</h2>
                         <input type="text" value={username} onChange={(e)=>setUsername(e.target.value)}/>
                     </div>
                     <div className='LoginInputBlock'>
                         <h2>Password</h2>
-                        <input type="password" value={password} onChange={(e)=>setPassword(e.target.value)}/>
+                        <input type={showPassword ? 'text' : 'password'} value={password} onChange={(e)=>setPassword(e.target.value)}/>
                     </div>
+                    <div className='showPasswordContainer'>
+                            <input type="checkbox" onChange={()=>setShowPassword(prev=>!prev)}/>
+                            <h2>Show password</h2>
+                        </div>
                     <button type='button' onClick={()=>handleLogin()}>Login</button>
-                    <h3>{message}</h3>
                 </div>
             </>
             }

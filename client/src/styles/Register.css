@@ -1,11 +1,12 @@
 .registerContainer{
-    height: 100vh;
+    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;  
 }
 .register{
+    overflow-y: scroll;
     padding: 15px;
     border-radius: 15px;
     background-color: white;
@@ -13,13 +14,17 @@
     max-width: 500px;
     height: 80vh;
 }
+.errorMessage{
+    margin: 0;
+    color:  rgb(255, 64, 64);
+}
 
 .RegisterBlock{
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 25px;
+    gap: 5px;
 }
 
 .RegisterInputBlock{
@@ -53,6 +58,19 @@
     background-color: rgba(255, 0, 0, 0.281);
     border-bottom: 2px solid rgb(194, 0, 0);
 }
+.showPasswordContainer{
+    width: 80%;
+    display: flex;
+    align-items: center;
+}
+.showPasswordContainer h2{
+    font-weight: 400;
+}
+.showPasswordContainer input{
+    height: 25px;
+    width: 25px;
+}
+
 .RegisterBlock button{
     border-radius: 35px;
     width: 80%;

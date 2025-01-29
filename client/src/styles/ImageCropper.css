@@ -1,3 +1,5 @@
-.cropperContainer{
-    background-color: red;
+.cropperBTNS{
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 10px;
 }

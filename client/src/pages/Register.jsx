@@ -10,6 +10,7 @@ function Register() {
         const [confirmPassword, setConfirmPassword] = useState("");
         const [message, setMessage] = useState("");
         const [loading, setLoading] = useState(false);
+        const [showPassword, setShowPassword] = useState(false);
         const navigate = useNavigate();
   
       async function handleRegister(){
@@ -50,20 +51,25 @@ function Register() {
                     Already have an account? <Link to='/login'>Log in</Link>
                     </h2>
                     <div className='RegisterBlock'>
+                        <h3 className='errorMessage'>{message}</h3>
                         <div className='RegisterInputBlock'>
                             <h2>Username</h2>
                             <input maxLength={15} required type="text" value={username} onChange={(e)=>setUsername(e.target.value)}/>
                         </div>
                         <div className='RegisterInputBlock'>
                             <h2>Password</h2>
-                            <input minLength={8} required type="password" pattern={confirmPassword} value={password} onChange={(e)=>setPassword(e.target.value)}/>
+                            <input minLength={8} pattern={confirmPassword ?  confirmPassword : undefined} required type={showPassword ? "text" : "password"} value={password} onChange={(e)=>setPassword(e.target.value)}/>
+                            
                         </div>
                         <div className='RegisterInputBlock'>
                             <h2>Confirm password</h2>
-                            <input minLength={8} maxLength={64} pattern={password} required type="password" value={confirmPassword} onChange={(e)=>setConfirmPassword(e.target.value)}/>
+                            <input minLength={8} maxLength={64} pattern={password} required type={showPassword ? "text" : "password"} value={confirmPassword} onChange={(e)=>setConfirmPassword(e.target.value)}/>
+                        </div>
+                        <div className='showPasswordContainer'>
+                            <input type="checkbox" onChange={()=>setShowPassword(prev=>!prev)}/>
+                            <h2>Show password</h2>
                         </div>
                         <button type='button' onClick={()=>handleRegister()} disabled={!(password===confirmPassword && password.length >= 8 && 1<=username<=15)}>Register</button>
-                        <h3>{message}</h3>
                     </div>
                 </>
               }

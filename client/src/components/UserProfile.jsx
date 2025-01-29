@@ -111,12 +111,15 @@ function UserProfile({user, isOpen}) {
         <>
             {
             loadingPfp ? 
-            <l-ring
+                <div style={{height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                    <l-ring
             size="100"
             stroke="10"
             bg-opacity="0"
             speed="3"
-            color="black" ></l-ring> : 
+            color="black" ></l-ring>
+                </div>
+            : 
             croppedImage ? 
             <div>
                 <h1>Profile picture changed!</h1>
@@ -149,11 +152,13 @@ function UserProfile({user, isOpen}) {
         <h2>The description was modified, restart the page to see the changes!</h2> :
         <>
             <h2 className='pf_descrTxt'>Description:</h2>
-            {editMode ? <input type="text" value={description} onChange={e=>setDescription(e.target.value)}/>: user.description && user.description.trim() != "" ? <h2 className='pf_descr'>{user.description}</h2> : 
-            <h2>No description yet. Add one!</h2>}
-            {editMode ? <button onClick={()=>setEditMode(false)}>Cancel</button> : <button onClick={()=>setEditMode(true)}>Modify description</button>}
+            {editMode ? <textarea className='descrInput' type="text" value={description} onChange={e=>setDescription(e.target.value)}/>: user.description && user.description.trim() != "" ? <h2 className='pf_descr'>{user.description}</h2> : 
+            <h2 className='pf_descr noDescr' >No description yet. Add one!</h2>}
             
-            {editMode ? <button onClick={()=>saveChanges()}>Save changes</button> : null}
+            <div className='descrButtons'>
+                {editMode ? <button onClick={()=>saveChanges()}>Save changes</button> : null}
+                {editMode ? <button onClick={()=>setEditMode(false)}>Cancel</button> : <button onClick={()=>{setDescription(user.description ?? ""), setEditMode(true)}}>Modify description</button>}     
+            </div>
         </>}
         
     </div>

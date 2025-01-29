@@ -3,6 +3,7 @@
     --mainColor: #2b7fe5;
 }
 .userToAdd{
+    box-sizing: border-box;
     border-radius: 15px;
     padding: 5px;
     display: flex;

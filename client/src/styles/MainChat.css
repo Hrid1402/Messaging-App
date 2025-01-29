@@ -39,7 +39,7 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    height: 100svh;
     background-color: var(--chatColor);
 }
 .InputArea{
@@ -71,6 +71,7 @@
 }
 
 .InputArea textarea{
+    max-height: 50vh;
     border: none;
     line-height: 43px;
     background-color: transparent;
@@ -235,7 +236,7 @@
     background: var(--myMessageColor);
 }
 .snapTalk_intr{
-    height: 100vh;
+    height: 100svh;
     overflow-y: scroll;
 }
 .snapTalk_intr .title{

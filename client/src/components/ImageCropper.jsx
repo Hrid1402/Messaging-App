@@ -77,7 +77,7 @@ function ImageCropper({ yourImage, onCropDone, onCropCancel }) {
         />
       </div>
       <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center', flexDirection:'column'}}>
-        <div>
+        <div className='cropperBTNS'>
         <button onClick={()=>onCropCancel()}>Cancel</button>
         <button onClick={()=>handleCrop()}>Crop Image</button>
         </div>

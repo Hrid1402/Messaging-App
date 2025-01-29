@@ -101,7 +101,9 @@ function App() {
           headers: {
               Authorization: `Bearer ${Cookies.get("jwt")}`,
               "Content-Type": "application/json"
-          }})
+          },
+          timeout: 8000
+        })
         const data = response.data;
         connectSocket(Cookies.get("jwt"));
         setUser(data)
@@ -154,7 +156,7 @@ function App() {
             <PendingRequests isOpen={openDialog_pr} user={user} socket={socket} updateFriends={updateFriends} updateChats={updateChats} setNewRequests={setNewRequests} newRequests={newRequests}/>
           </Rodal>
 
-          <Rodal visible={openDialog_mf} onClose={()=>setOpenDialog_mf(false)} customStyles={{maxWidth:'430px',width:'80vw', height:'60vh'}}>
+          <Rodal visible={openDialog_mf} onClose={()=>setOpenDialog_mf(false)} customStyles={{maxWidth:'430px',width:'80vw', height:'80vh'}}>
             <MyFriends isOpen={openDialog_mf} user={user} socket={socket} myFriends={myFriends}/>
           </Rodal>
 

@@ -53,7 +53,10 @@ function MainChat({chat, friend, user, socket, updateCurrentChatData, chats, mod
         containerRef.current.addEventListener('scroll', handleScroll);
         handleScroll();
         return () => {
-            containerRef.current.removeEventListener('scroll', handleScroll);
+            if(containerRef.current){
+                containerRef.current.removeEventListener('scroll', handleScroll);
+            }
+            
         }
     },[friend])
 
@@ -248,7 +251,7 @@ function MainChat({chat, friend, user, socket, updateCurrentChatData, chats, mod
 
   return (
     <>
-        <Rodal visible={friendDialogOpen} onClose={()=>setFriendDialogOpen(false)} customStyles={{maxWidth:'600px',width:'80vw', height:'60vh'}}>
+        <Rodal visible={friendDialogOpen} onClose={()=>setFriendDialogOpen(false)} customStyles={{maxWidth:'600px',width:'80vw', height:'80vh'}}>
             <FriendProfile chatID={currentChat.id} isOpen={friendDialogOpen} simple={true} chat={true} id={friend.id} username={friend.username} description={friend.description} pfp={friend.picture} socket={socket} myID={user.id} myUsername={user.username} closeModal={()=>setFriendDialogOpen(false)}/>
         </Rodal>
 
@@ -315,7 +318,7 @@ function MainChat({chat, friend, user, socket, updateCurrentChatData, chats, mod
                 : 
                     <>
                         <input type="file" style={{display:'none'}} ref={inputImageRef} onChange={e=>handleImage(e)}/>
-                        <textarea value={message} onChange={(e)=>setMessage(e.target.value)} onKeyDown={handleKeyPress}></textarea>
+                        <textarea maxLength={1500} value={message} onChange={(e)=>setMessage(e.target.value)} onKeyDown={handleKeyPress}></textarea>
                         <button onClick={()=>inputImageRef.current.click()} className={`image_btn ${message ? 'hidden' : ''}`}><img src={imageIcon} alt='img'></img></button>
                         <button onClick={()=>setShowGifModal(true)} className={`gif_btn ${message ? 'hidden' : ''}`}><img src={gifIcon} alt='gif'></img></button>
                         <button onClick={()=>setShowGenerationModal(true)} className={`generative_btn ${message ? 'hidden' : ''}`}><img src={generativeIcon} alt='generative AI'></img></button>

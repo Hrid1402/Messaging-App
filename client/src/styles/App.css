@@ -1,7 +1,7 @@
 #root {
   width: 100%;
   text-align: center;
-  height: 100vh;
+  height: 100%;
   margin: 0;
   padding: 0;
   overflow-y: hidden;
@@ -11,7 +11,7 @@
 }
 /*NORMAL PART*/
 .normalContainer{
-  height: 100vh;
+  height: 100%;
   display: grid;
   width: 100vw;
   justify-items: center;
