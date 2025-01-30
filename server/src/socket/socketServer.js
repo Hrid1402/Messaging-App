@@ -2,6 +2,7 @@ import {Server} from 'socket.io'
 import { jwtDecode } from "jwt-decode";
 import { PrismaClient } from '@prisma/client'
 import { socketHandler } from './socketHandler.js';
+import 'dotenv/config'
 const prisma = new PrismaClient()
 import cors from "cors"
 
@@ -9,7 +10,7 @@ export const socketServer = (server)=>{
     const io = new Server(server);
 
     io.engine.use(cors({
-        origin: "*",
+        origin: process.env.CLIENT_URL,
         credentials: true
     }));
 
