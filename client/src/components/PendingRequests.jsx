@@ -4,6 +4,7 @@ import FriendProfile from './FriendProfile.jsx';
 import axios from 'axios'
 import {toast} from 'react-toastify';
 import '../styles/PendingRequests.css'
+import 'ldrs/tailChase'
 import Cookies from 'js-cookie'
 
 
@@ -12,6 +13,7 @@ function PendingRequests({isOpen, user, socket, updateFriends, updateChats, setN
 
   const [friendData, setFriendData] = useState(null);
   const [showFriendData, setShowFriendData] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   async function updateNewRequest(){
     await axios.put(`${import.meta.env.VITE_SERVER_URL}/auth/user`,{
@@ -50,6 +52,7 @@ function PendingRequests({isOpen, user, socket, updateFriends, updateChats, setN
     const handleUpdateAcceptedRequest = (data) =>{
       console.log(data);
       toast.success(`Request from ${data.from} accepted!.`);
+      setLoading(false);
       setFriendRequests(data.received);
       updateFriends(data.friends);
       updateChats(data.chats);
@@ -59,6 +62,7 @@ function PendingRequests({isOpen, user, socket, updateFriends, updateChats, setN
     const handleUpdateDeclinedRequest = (data) => {
       console.log(data);
       toast(`Request from ${data.from} declined.`);
+      setLoading(false);
       setFriendRequests(data.received);
     }
     socket.on('updateDeclinedRequest', handleUpdateDeclinedRequest);
@@ -73,11 +77,13 @@ function PendingRequests({isOpen, user, socket, updateFriends, updateChats, setN
 
   function acceptFriendRequest(friend){
     console.log("Accept", friend);
+    setLoading(true);
     socket.emit('acceptFriendRequest', { fromID : friend.fromID, toID: user.id, fromName: friend.fromName, toName: user.username});
   }
 
   function declineFriendRequest(friend){
     console.log("Declined", friend);
+    setLoading(true);
     socket.emit('declineFriendRequest', { fromID : friend.fromID, toID: user.id, fromName: friend.fromName, toName: user.username});
   }
 
@@ -94,21 +100,31 @@ function PendingRequests({isOpen, user, socket, updateFriends, updateChats, setN
     <>
       <h1>Pending Requests</h1>
       <div className='PR_container'>
-      {friendRequests.length != 0 ? 
-        friendRequests.map(f=>{
-          return (
-            <div key={f.id} className='pendingRequest'role="button" tabIndex={0} onClick={()=>{setShowFriendData(true), setFriendData({id: f.from.id, username: f.from.username, description: f.from.description, pfp: f.from.picture})}}>
-              <div className="PR_User"> 
-                <img src={f.from.picture ?? noPicture} />
-                <h2>{f.fromName}</h2>
+      {
+        loading ? 
+        <div>
+          <l-tail-chase
+        size="80"
+        speed="1.75"
+        color="black" 
+      ></l-tail-chase>  
+        </div> :
+        friendRequests.length != 0 ? 
+          friendRequests.map(f=>{
+            return (
+              <div key={f.id} className='pendingRequest'role="button" tabIndex={0} onClick={()=>{setShowFriendData(true), setFriendData({id: f.from.id, username: f.from.username, description: f.from.description, pfp: f.from.picture})}}>
+                <div className="PR_User"> 
+                  <img src={f.from.picture ?? noPicture} />
+                  <h2>{f.fromName}</h2>
+                </div>
+                <div className='PR_btns'>
+                  <button onClick={(e)=>{e.stopPropagation(), acceptFriendRequest(f)}}>Accept</button>
+                  <button onClick={(e)=>{e.stopPropagation(), declineFriendRequest(f)}}>Decline</button>
+                </div>
               </div>
-              <div className='PR_btns'>
-                <button onClick={(e)=>{e.stopPropagation(), acceptFriendRequest(f)}}>Accept</button>
-                <button onClick={(e)=>{e.stopPropagation(), declineFriendRequest(f)}}>Decline</button>
-              </div>
-            </div>
-          )
-        }) : <h2>No pending requests at the moment.</h2> 
+            )
+          }) : <h2>No pending requests at the moment.</h2> 
+        
       }
       </div>
       

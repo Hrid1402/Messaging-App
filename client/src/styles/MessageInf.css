@@ -16,6 +16,7 @@
 }
 .MI_Content{
     font-size: 20px;
+    word-break: break-word;
     font-weight: 400;
     margin: 0;
 }

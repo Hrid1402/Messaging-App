@@ -19,6 +19,8 @@ function FriendProfile({isOpen, chatID, chat=false, simple=false, id, username, 
   function removeFriend(){
     console.log("Removing " + username);
     socket.emit('removeFriend', { fromID : myID, toID: id, fromName: myUsername, toName: username});
+    toast(`Removing ${username} from friends...`)
+    closeModal();
   }
   function changeBackground(background, isImage){
     socket.emit('changeBackground', { fromID : myID, toID: id, fromName: myUsername, chatID: chatID, background: isImage ? `url(${background})` : background});

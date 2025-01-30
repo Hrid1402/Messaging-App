@@ -20,7 +20,7 @@ function MyFriends({isOpen, myFriends, socket, user}) {
         return(
           <>
             <button className='returnFriendBTN' onClick={()=>setShowFriendData(false)}><img src={returnIcon} alt='Return'></img></button>
-            <FriendProfile id={friendData.id} username={friendData.username} pfp={friendData.pfp} description={friendData.description} socket={socket} myID={user.id} myUsername={user.username}></FriendProfile>
+            <FriendProfile id={friendData.id} username={friendData.username} pfp={friendData.pfp} description={friendData.description} socket={socket} myID={user.id} myUsername={user.username} closeModal={()=>setShowFriendData(false)}></FriendProfile>
             
           </>
         )
